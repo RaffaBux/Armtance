@@ -1,0 +1,33 @@
+{
+  "name": "reactchaintest",
+  "version": "1.0.0",
+  "description": "quick project to test interaction between react and solidity contracts",
+  "main": "index.js",
+  "scripts": {
+    "localS": "hardhat node",
+    "build": "hardhat compile",
+    "test": "hardhat coverage",
+    "deploy": "hardhat run --network localhost ./src/scripts/deployBallot.js",
+    "buildT": "hardhat compile && hardhat coverage",
+    "buildD": "hardhat compile && hardhat run --network localhost ./src/scripts/deployBallot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaffaBux/ReactChainTest.git"
+  },
+  "author": "Raffa Bux",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RaffaBux/ReactChainTest/issues"
+  },
+  "homepage": "https://github.com/RaffaBux/ReactChainTest#readme",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.5",
+    "chai": "^4.3.7",
+    "ethereum-waffle": "^2.2.0",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.13.1",
+    "solidity-coverage": "^0.7.22"
+  }
+}
