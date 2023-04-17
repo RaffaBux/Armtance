@@ -1,3 +1,10 @@
+# FIRST THING FIRST
+run
+```
+npm install
+```
+both in __./__ and __./client__ to download all the dependencies
+
 # TO START A LOCAL REACT SERVER
 open a terminal instance **inside client directory** and run the following command:
 ```
