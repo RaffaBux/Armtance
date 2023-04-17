@@ -1,4 +1,11 @@
-# TO START A LOCAL SERVER
+# TO START A LOCAL REACT SERVER
+open a terminal instance **inside client directory** and run the following command:
+```
+npm start
+```
+for more info please refer to README.md inside client directory :D
+
+# TO START A LOCAL HARDHAT SERVER
 open a terminal instance and run the following command:
 ```
 npm run localS
