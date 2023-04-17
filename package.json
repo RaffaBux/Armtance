@@ -28,6 +28,7 @@
     "ethereum-waffle": "^2.2.0",
     "ethers": "^5.7.2",
     "hardhat": "^2.13.1",
-    "solidity-coverage": "^0.7.22"
+    "solidity-coverage": "^0.7.22",
+    "create-react-app": "^5.0.1"
   }
 }
