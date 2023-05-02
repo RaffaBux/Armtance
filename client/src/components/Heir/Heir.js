@@ -3,7 +3,7 @@ import { RiDeleteBin2Fill } from "react-icons/ri";
 
 export default function Heir(props) {
   function removeHeir() {
-    props.remove(props.key);
+    props.remove(props.index);
   }
   
   return(
