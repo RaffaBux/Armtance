@@ -1,44 +1,74 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19 <0.9.0;
 
-//lore del contratto: nella notte Armando muore e bisogna modificare il suo stato e dividere la sua eredità
+import './SelfSovereignIdentity.sol';
+import './Settings.sol';
+
+struct Degree {
+	string degreeType;
+	string name;
+}
+
+struct CredentialSubject {
+	string id;
+	Degree degree;
+}
+
+struct Proof {
+	string proofType;
+	string creationDate;
+	string verificationMethod;
+	string proofPurpose;
+	string proofValue;
+}
+
+struct VerifiableCredential {
+	string[] context;
+	string id;
+	string[] credentialTypes;
+	string issuer;
+	string issuanceDate;
+	CredentialSubject credentialSubject;
+	Proof proof;
+}
+
+
+struct Issuer {
+	address issuerAddress;
+	string issuerDid;
+}
 
 contract Inheritance {
 
-	string deceasedDid;
-	string trustedIssuerDid;
-	string[] heirsDid;
+	VerifiableCredential private vC;
+	SelfSovereignIdentity private ssi;
+	string private deceasedDid;
 
-	// constructor() payable {
-	// 	owner = msg.sender;
-	// 	fortune = msg.value;
-	// 	deceased = false;
-	// }
+	Issuer private trustedIssuer;
+	mapping(string => Heir) private heirs;
 
-	// modifier onlyOwner {                //codice può proseguire solo se il chiamante della funzione è il proprietario del contratto
-	// 	require(msg.sender == owner);
-	// 	_;
-	// }
+	constructor(
+		VerifiableCredential memory _verifiableCredential,
+		Heir[] memory heirList,
+		string memory 
+	) {
 
-	// modifier mustBeDead {
-	// 	require(deceased == true);
-	// 	_;
-	// }
+		vC = _verifiableCredential;
+		ssi = new SelfSovereignIdentity();
 
-	// function setInheritance(address payable wallet, uint amount) public {
-	// 	familyWallets.push(wallet);
-	// 	inheritance[wallet] = amount;
-	// }
+		string memory trustedIssuerDid = ssi.createDid(); //ssi.createDid().(msg.sender) == this.(msg.sender) ?
+		trustedIssuer = Issuer(msg.sender, trustedIssuerDid);
 
-	// function payout() private mustBeDead {
-	// 	for(uint i=0; i<familyWallets.length; i++) {
-	// 		familyWallets[i].transfer(inheritance[familyWallets[i]]);
-	// 	}
-	// }
+		for(uint i = 0; i < heirList.length; i++) {
+			address tmpHeirAddress = heirList[i].heirAddress;
 
-	// function setDeceased() public onlyOwner {
-	// 	deceased = true;
-	// 	payout();
-	// }
+			string memory heirTrustedDid = ssi.createChildTrustedDid(tmpHeirAddress, trustedIssuerDid);
+
+			heirs.push(
+				Heir(tmpHeirAddress, heirTrustedDid, trustedIssuerDid)
+			);
+		}
+
+	}
 
 }
