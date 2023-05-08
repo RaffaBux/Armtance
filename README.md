@@ -31,9 +31,9 @@ npm run localS
   ```
 
 ### PROJECT CREATED ACCORDING TO
-→ https://oliverjumpertz.com/how-to-set-up-a-solidity-project-and-create-your-first-smart-contract
-→ https://youtu.be/YApS-e3I7cU
+→ https://oliverjumpertz.com/how-to-set-up-a-solidity-project-and-create-your-first-smart-contract </br>
+→ https://youtu.be/YApS-e3I7cU </br>
 
 ### REACT ACCORDING TO
-→ https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-the-complete-guide/
-→ https://youtu.be/IbqsLZUHR3k
+→ https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-the-complete-guide/ </br>
+→ https://youtu.be/IbqsLZUHR3k </br>
