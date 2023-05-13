@@ -1,0 +1,19 @@
+.inheritance {
+  padding: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#confirmButtonContainer {
+  background-color: #c7ecf7;
+  margin: 10px;
+  text-decoration: none;
+}
+
+#confirmText {
+  padding: 10px;
+  margin: 10px;
+  color: black;
+}

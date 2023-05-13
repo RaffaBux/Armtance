@@ -1,9 +1,10 @@
-import './inheritance.css';
-import Heir from '../Heir/Heir'
-import { RiAddCircleFill } from 'react-icons/ri';
+import './settings.css';
+import React from 'react';
+import Heir from '../Heir/Heir';
 import { useState } from 'react';
+import { RiAddCircleFill } from 'react-icons/ri';
 
-export default function Inheritance() {
+export default function Settings() {
 
   const [heirId, setHeirId] = useState(1);
   const [heirsCollection, updateHeirsCollection] = useState([0]);
@@ -27,7 +28,7 @@ export default function Inheritance() {
   }
   
   return(
-    <div className='inheritance'>
+    <div className='settings'>
       <div id='alignedContent' className='announcement'>
         <h3>
           ciao, sono Armando e prima di venir cullato dolcemente 
@@ -46,8 +47,8 @@ export default function Inheritance() {
           <RiAddCircleFill/>
         </div>
         <div>
-          <div className='confirmButtonContainer' onClick={() => { setHeirsData() }}>
-            <h5 className='confirmText'>CONFERMA</h5>
+          <div id='confirmButtonContainer' onClick={() => { setHeirsData() }}>
+            <h5 id='confirmText'>CONFERMA</h5>
           </div>
         </div>
       </div>

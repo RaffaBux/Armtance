@@ -1,4 +1,5 @@
 import './address.css';
+import React from 'react';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 
 export default function Address(props) {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19 <0.9.0;
 
-import './SelfSovereignIdentity.sol'; // test line
+import '../SSI/SelfSovereignIdentity.sol'; // test line
 
 // struct Degree {
 // 	string degreeType;
@@ -54,7 +54,7 @@ struct Heir {
 	string did;
 	bool delegated;
 	bool active;
-	Account[] addressCollection;
+	// Account[] addressCollection;
 }
 
 contract Inheritance {
@@ -96,7 +96,8 @@ contract Inheritance {
 		Account[] memory heirAccounts;
 		for(uint i = 0; i < _dids.length; i++) {	// TO DO: controllo nel caso il did esista già
 			heirAccounts = setAddresses(_addresses[i], _amounts[i]);
-			heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true, heirAccounts);
+			heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true);
+			// heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true, heirAccounts);
 			numberOfHeirs++;
 
 			heirsIdToDid[heirIndex++] = _dids[i];
@@ -136,34 +137,34 @@ contract Inheritance {
 
 	// → pensare una meglio implementazione o sticazzi?
 	function split() private {
-		uint idAmount;
-		address payable idAddress;
-		string memory iterationHeirDid;
-		Heir memory iterationHeir;
-		Account[] memory heirAddressCollection;
-		Account memory iterationAccount;
+		// uint idAmount;
+		// address payable idAddress;
+		// string memory iterationHeirDid;
+		// Heir memory iterationHeir;
+		// Account[] memory heirAddressCollection;
+		// Account memory iterationAccount;
 		
-		for(uint i = 0; i < heirIndex; i++) {
+		// for(uint i = 0; i < heirIndex; i++) {
 
-			iterationHeirDid = heirsIdToDid[i];
+		// 	iterationHeirDid = heirsIdToDid[i];
 
-			iterationHeir = heirsDidToHeir[iterationHeirDid];
+		// 	iterationHeir = heirsDidToHeir[iterationHeirDid];
 
-			if(iterationHeir.active == true) {
-				heirAddressCollection = iterationHeir.addressCollection;
-				for(uint accountIndex = 0; accountIndex < heirAddressCollection.length; accountIndex++) {
-					iterationAccount = heirAddressCollection[accountIndex];
-					idAmount = iterationAccount.amount;
-					if(idAmount > 0) {
-						idAddress = iterationAccount.accountAddress;
+		// 	if(iterationHeir.active == true) {
+		// 		heirAddressCollection = iterationHeir.addressCollection;
+		// 		for(uint accountIndex = 0; accountIndex < heirAddressCollection.length; accountIndex++) {
+		// 			iterationAccount = heirAddressCollection[accountIndex];
+		// 			idAmount = iterationAccount.amount;
+		// 			if(idAmount > 0) {
+		// 				idAddress = iterationAccount.accountAddress;
 						
-						// si prende i soldi direttamente dal conto dell'issuer?
-						(bool success, ) = idAddress.call{value: idAmount}(''); // reentrancy?
-						require(success, 'Fato caca adoso :C');
-					}
-				}
-			}
-		}
+		// 				// si prende i soldi direttamente dal conto dell'issuer?
+		// 				(bool success, ) = idAddress.call{value: idAmount}(''); // reentrancy?
+		// 				require(success, 'Fato caca adoso :C');
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
 	// function modify(

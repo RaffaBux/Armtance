@@ -1,34 +1,49 @@
 {
-  "name": "reactchaintest",
-  "version": "1.0.0",
-  "description": "quick project to test interaction between react and solidity contracts",
-  "main": "index.js",
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
+    "react-router-dom": "^6.11.1",
+    "react-scripts": "^2.1.3",
+    "web-vitals": "^2.1.4",
+    "web3": "^1.10.0"
+  },
   "scripts": {
-    "localS": "hardhat node",
-    "build": "hardhat compile",
-    "test": "hardhat coverage",
-    "deploy": "hardhat run --network localhost ./src/scripts/deployBallot.js",
-    "buildT": "hardhat compile && hardhat coverage",
-    "buildD": "hardhat compile && hardhat run --network localhost ./src/scripts/deployBallot.js"
+    "start": "npm install && react-scripts start",
+    "build": "react-scripts build",
+    "hardhat": "npx hardhat node",
+    "clear": "npx hardhat clean",
+    "compileAll": "npm run clear && npx hardhat compile",
+    "deploySSI": "npm run compileAll && cd contracts && npx hardhat run --network localhost SSI/deploySSI.js && cd .."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RaffaBux/ReactChainTest.git"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "author": "Raffa Bux",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/RaffaBux/ReactChainTest/issues"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
-  "homepage": "https://github.com/RaffaBux/ReactChainTest#readme",
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@nomiclabs/hardhat-waffle": "^2.0.5",
-    "chai": "^4.3.7",
-    "ethereum-waffle": "^2.2.0",
-    "ethers": "^5.7.2",
-    "hardhat": "^2.13.1",
-    "solidity-coverage": "^0.7.22",
-    "create-react-app": "^5.0.1"
+    "hardhat": "^2.14.0"
   }
 }

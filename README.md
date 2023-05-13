@@ -1,39 +1,41 @@
-# FIRST THING FIRST
-run
-```
-npm install
-```
-both in __./__ and __./client__ to download all the dependencies
+# Recommended Node version for the project
 
-# TO START A LOCAL REACT SERVER
-open a terminal instance **inside client directory** and run the following command:
-```
-npm start
-```
-for more info please refer to README.md inside client directory :D
+`node v16.0.0`
 
-# TO START A LOCAL HARDHAT SERVER
-open a terminal instance and run the following command:
-```
-npm run localS
-```
+## Available Scripts
 
-  # TO BUILD AND DEPLOY THE CONTRACT
-  open a terminal instance and run the following command:
-  ```
-  npm run buildD
-  ```
+In the project directory, you can run: </br>
 
-  # TO BUILD AND TEST THE CONTRACT
-  open a terminal instance and run the following command:
-  ```
-  npm run buildT
-  ```
+### `npm start`
 
-### PROJECT CREATED ACCORDING TO
-→ https://oliverjumpertz.com/how-to-set-up-a-solidity-project-and-create-your-first-smart-contract </br>
-→ https://youtu.be/YApS-e3I7cU </br>
+Downloads all the dependencies. </br>
 
-### REACT ACCORDING TO
-→ https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-the-complete-guide/ </br>
-→ https://youtu.be/IbqsLZUHR3k </br>
+Runs the app in the development mode. </br>
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser. </br>
+
+The page will reload when you make changes. </br>
+You may also see any lint errors in the console. </br>
+
+### `npm run hardhat`
+
+Runs a Hardhat network. </br>
+
+### `npm run compileAll`
+
+Compiles all the Solidity contracts. </br>
+
+### `npm run deploySSI`
+(IT ONLY RUNS IF THERE ALREADY IS A HARDHAT NETWORK UP!). </br>
+Compiles just the SelfSovereignIdentity contract. </br>
+Deploys the SelfSovereignIdentity contract. </br>
+
+
+### `npm run build`
+
+Builds the app for production to the `build` folder. </br>
+It correctly bundles React in production mode and optimizes the build for the best performance. </br>
+
+The build is minified and the filenames include the hashes. </br>
+Your app is ready to be deployed!. </br>
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information. </br>

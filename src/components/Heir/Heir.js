@@ -1,4 +1,5 @@
 import './heir.css';
+import React from 'react';
 import { useState } from 'react';
 import { Checkbox } from '@mui/material';
 import Address from '../Address/Address';
