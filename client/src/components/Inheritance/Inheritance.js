@@ -1,45 +1,62 @@
 import './inheritance.css';
+import Heir from '../Heir/Heir'
 import { RiAddCircleFill } from 'react-icons/ri';
 import { useState } from 'react';
-import Heir from '../Heir/Heir'
-
-var heirId = 1;
 
 export default function Inheritance() {
-  const [heirs, setHeir] = useState([<Heir key={0} index={0} remove={removeHeirHandler}/>]);
-  
+
+  const [heirId, setHeirId] = useState(1);
+  const [heirsCollection, updateHeirsCollection] = useState([0]);
+
   function addHeirHandler() {
-    setHeir([
-      ...heirs,
-      <Heir key={heirId} index={heirId} remove={removeHeirHandler}/>
-    ]);
-    heirId++;
+    updateHeirsCollection(prevHeirs => ([
+      ...prevHeirs,
+      heirId
+    ]));
+    setHeirId(heirId + 1);
   }
 
   function removeHeirHandler(toRemove) {
-    if(heirs.length > 0) {
-      setHeir(
-        heirs.filter((heir) => heir.index !== toRemove)
-      );
+    if(heirsCollection.length > 1) {
+      updateHeirsCollection(prevHeirs => prevHeirs.filter(heir => heir !== toRemove));
     }
+  }
+
+  function setHeirsData() {
+    console.log('caca adoso :D');
   }
   
   return(
     <div className='inheritance'>
       <div id='alignedContent' className='announcement'>
-        <h3>Armando è morto lasciando in eredità la modesta somma di</h3>
-        <input className='eredityInput'/>
-        <h3>ETH</h3>
+        <h3>
+          ciao, sono Armando e prima di venir cullato dolcemente 
+          tra le braccia candide dell'angelo della Morte decido 
+          come spartire la mia eredit&agrave; tra quegli sfigati
+          dei miei eredi
+        </h3>
       </div>
       <hr/>
       <div id='alignedContent' className='addHeir'>
-        <h4 id='contentMargin'>Inserisci gli eredi tra cui spartire l'eredit&agrave; e il loro ammontare:</h4>
-        <div id='contentPadding' onClick={() => { addHeirHandler(); }}>
+        <h4 id='contentMargin'>
+          inserisci i DID degli eredi tra cui spartire l'eredit&agrave;, 
+          i loro address e l'ammontare corrispondente:
+        </h4>
+        <div id='contentPadding' onClick={() => { addHeirHandler() }}>
           <RiAddCircleFill/>
+        </div>
+        <div>
+          <div className='confirmButtonContainer' onClick={() => { setHeirsData() }}>
+            <h5 className='confirmText'>CONFERMA</h5>
+          </div>
         </div>
       </div>
       <div>
-        {heirs}
+        {
+          heirsCollection.map((heirId) => (
+            <Heir key={heirId} index={heirId} remove={removeHeirHandler}/>
+          ))
+        }
       </div>
     </div>
   );

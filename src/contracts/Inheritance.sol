@@ -3,15 +3,15 @@ pragma solidity ^0.8.19 <0.9.0;
 
 import './SelfSovereignIdentity.sol'; // test line
 
-struct Degree {
-	string degreeType;
-	string name;
-}
+// struct Degree {
+// 	string degreeType;
+// 	string name;
+// }
 
-struct CredentialSubject {
-	string id;
-	Degree degree;
-}
+// struct CredentialSubject {
+// 	string id;
+// 	Degree degree;
+// }
 
 struct Proof {
 	string proofType;
@@ -27,7 +27,7 @@ struct VerifiableCredential {
 	string[] credentialTypes;
 	string issuer;
 	string issuanceDate;
-	CredentialSubject credentialSubject;
+	// CredentialSubject credentialSubject;
 	Proof proof;
 }
 
@@ -106,7 +106,7 @@ contract Inheritance {
 	
 	// → per come è stato progettato il contratto, al momento
 	//		_heirAddresses.length == _heirAddressesAmount.length
-	Account[] heirAccountCollection;
+	Account[] private heirAccountCollection;
 	function setAddresses(
 		address payable[] memory _heirAddresses,
 		uint[] memory _heirAddressesAmount
@@ -121,13 +121,17 @@ contract Inheritance {
 	// → la VC mi arriva come stringa
 	// → TODO: riformattare stringa VC
 	function verify(string memory _vC) public {
-		// vC = _vC;
+		vC = format(_vC);
 		bool verified = false;
 		if(verified) {
 			split();
 		} else {
 			split();
 		}		
+	}
+
+	function format(string memory _vC) private returns (VerifiableCredential memory) {
+		// return VerifiableCredential();
 	}
 
 	// → pensare una meglio implementazione o sticazzi?
