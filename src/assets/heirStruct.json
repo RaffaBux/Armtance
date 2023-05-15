@@ -1,0 +1,10 @@
+{
+  "heirId": 0,
+  "heirDid": "did:didMethod:",
+  "delegation": false,
+  "addressData": [{
+    "addressId": 0,
+    "address": "0x",
+    "amount": 0
+  }]
+}
