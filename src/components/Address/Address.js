@@ -1,17 +1,27 @@
 import './address.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
+import AddressStruct from '../../assets/addressStruct.json';
 
 export default function Address(props) {
 
-  function packData() {
-    var packedData = {
-      addressId: props.index,
-      address: '0x'.concat(document.getElementsByClassName('address')[0].value),
-      amount: document.getElementsByClassName('amount')[0].value
-    }
+  const [addressData, updateAddressData] = useState(setDefaultData());
 
-    props.update(packedData);
+  function setDefaultData() {
+    var defaultAddressData = {...AddressStruct};
+    defaultAddressData.addressId = props.index;
+    return defaultAddressData;
+  }
+
+  function handleChange() {
+    var newAddressData = addressData;
+    newAddressData.address = '0x'.concat(document.getElementById('address').value);
+    newAddressData.amount = document.getElementById('amount').value;
+    
+    console.log(newAddressData.address);
+
+    props.update(newAddressData);
+    updateAddressData(newAddressData);
   }
 
   function removeAddress() {
@@ -26,9 +36,9 @@ export default function Address(props) {
       <hr/>
       <h5 id='contentMargin'>address:</h5>
       <h5 id='precompiledWord'>0x</h5>
-      <input id='eredityInput' className='address' maxLength={40} onChange={packData}/>
+      <input id='address' className='eredityInput' maxLength={40} onChange={handleChange}/>
       <hr/>
-      <input id='smallEredityInput' className='amount' onChange={packData}/>
+      <input id='amount' className='smallEredityInput' onChange={handleChange}/>
       <h5 id='contentMargin'>ETH</h5>
     </div>
   );

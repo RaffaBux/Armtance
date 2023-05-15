@@ -1,30 +1,55 @@
 import './settings.css';
-import React from 'react';
 import Heir from '../Heir/Heir';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { RiAddCircleFill } from 'react-icons/ri';
+import HeirStruct from '../../assets/heirStruct.json';
 
 export default function Settings() {
 
-  const [heirId, setHeirId] = useState(1);
-  const [heirsCollection, updateHeirsCollection] = useState([0]);
+  const [heirsIdCounter, updateHeirsIdCounter] = useState(1);
+  const [heirsIdCollection, updateHeirsIdCollection] = useState([0]);
 
-  function addHeirHandler() {
-    updateHeirsCollection(prevHeirs => ([
-      ...prevHeirs,
-      heirId
+  const [heirList, updateHeirList] = useState([{...HeirStruct}]);
+
+  function addHeirHandler() {    
+    updateHeirsIdCollection(prevHeirIds => ([
+      ...prevHeirIds,
+      heirsIdCounter
     ]));
-    setHeirId(heirId + 1);
+
+    updateHeirList(prevHeirs => ([
+      ...prevHeirs,
+      getNewDefaultHeir(heirsIdCounter)
+    ]));
+
+    updateHeirsIdCounter(heirsIdCounter + 1);
+  }
+
+  function getNewDefaultHeir(id) {
+    var newHeir = {...HeirStruct};
+    newHeir.heirId = id;
+    return(newHeir);
   }
 
   function removeHeirHandler(toRemove) {
-    if(heirsCollection.length > 1) {
-      updateHeirsCollection(prevHeirs => prevHeirs.filter(heir => heir !== toRemove));
+    if(heirsIdCollection.length > 1) {
+      updateHeirsIdCollection(prevHeirIds => prevHeirIds.filter(id => id !== toRemove));
     }
+
+    updateHeirList(prevHeirList => prevHeirList.filter(heir => heir.heirId !== toRemove));
   }
 
-  function setHeirsData() {
-    console.log('caca adoso :D');
+  function dataUpdateHandler(updatedData) {
+    var newHeirList = heirList;
+
+    for(let i = 0; i < newHeirList.length; i++) {
+      if(newHeirList[i].heirId === updatedData.heirId) {
+        newHeirList[i] = updatedData;
+        break;
+      }
+    }
+
+    updateHeirList(newHeirList);
   }
   
   return(
@@ -47,15 +72,20 @@ export default function Settings() {
           <RiAddCircleFill/>
         </div>
         <div>
-          <div id='confirmButtonContainer' onClick={() => { setHeirsData() }}>
+          <div id='confirmButtonContainer' onClick={() => { console.log(heirList)}}>
             <h5 id='confirmText'>CONFERMA</h5>
           </div>
         </div>
       </div>
       <div>
         {
-          heirsCollection.map((heirId) => (
-            <Heir key={heirId} index={heirId} remove={removeHeirHandler}/>
+          heirsIdCollection.map((heirIdIterator) => (
+            <Heir 
+              key={heirIdIterator} 
+              index={heirIdIterator}
+              update={dataUpdateHandler} 
+              remove={removeHeirHandler}
+            />
           ))
         }
       </div>

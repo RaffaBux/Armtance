@@ -1,26 +1,24 @@
 import './heir.css';
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Checkbox } from '@mui/material';
 import Address from '../Address/Address';
+import HeirStruct from '../../assets/heirStruct.json';
+import AddressStruct from '../../assets/addressStruct.json';
 import { RiDeleteBin2Fill, RiAddCircleFill } from 'react-icons/ri';
 
 export default function Heir(props) {
 
-  const [thisAddressId, setThisAddressId] = useState(1);
+  const [addressIdCounter, updateAddressIdCounter] = useState(1);
   const [delegated, setDelegation] = useState(false);
   const [addressCollection, updateAddressCollection] = useState([0]);
 
-  const [heirStruct, updateHeirStruct] = useState({
-    heirId: props.index,
-    heirDid: 'did:didMethod:',
-    delegation: delegated,
-    addressData: [{
-      addressId: 0,
-      address: '0x',
-      amount: 0
-    }]
-  });
+  const [heirStruct, updateHeirStruct] = useState(setDefaultStruct());
+
+  function setDefaultStruct() {
+    var defaultHeirStruct = {...HeirStruct};
+    defaultHeirStruct.heirId = props.index;
+    return defaultHeirStruct;
+  }
   
   function removeHeir() {
     props.remove(props.index);
@@ -29,18 +27,19 @@ export default function Heir(props) {
   function addAddressHandler() {
     updateAddressCollection(prevAddresses => ([
       ...prevAddresses,
-      thisAddressId
+      addressIdCounter
     ]));
 
     var newHeirStruct = heirStruct;
-    newHeirStruct.addressData.push({
-      addressId: thisAddressId,
-      address: '0x',
-      amount: 0
-    });
-    updateHeirStruct(newHeirStruct);
+    var newAddressStruct = {...AddressStruct};
+    newAddressStruct.addressId = addressIdCounter;
+    newHeirStruct.addressData.push(newAddressStruct);
 
-    setThisAddressId(thisAddressId + 1);
+    console.log(newHeirStruct.addressData);
+    
+    dataUpdateHandler(newHeirStruct);
+
+    updateAddressIdCounter(addressIdCounter + 1);
   }
   
   function removeAddressHandler(toRemove) {
@@ -57,36 +56,38 @@ export default function Heir(props) {
       address => address.addressId !== toRemove
     );
     newHeirStruct.addressData = newAddressArray;
-    updateHeirStruct(newHeirStruct);
+    dataUpdateHandler(newHeirStruct);
   }
 
-  function updateAddressData(packedData) {
+  function updateAddressData(newData) {
     var newHeirStruct = heirStruct;
 
     for(let i = 0; i < newHeirStruct.addressData.length; i++) {
-      if(newHeirStruct.addressData[i].addressId === packedData.addressId) {
-        newHeirStruct.addressData[i] = packedData;
+      if(newHeirStruct.addressData[i].addressId === newData.addressId) {
+        newHeirStruct.addressData[i] = newData;
         break;
       }
     }
 
-    updateHeirStruct(newHeirStruct);
+    dataUpdateHandler(newHeirStruct);
   }
 
   function updateDelegation() {
     var newHeirStruct = heirStruct;
     newHeirStruct.delegation = !delegated;
-    updateHeirStruct(newHeirStruct);
-
+    dataUpdateHandler(newHeirStruct);
     setDelegation(!delegated);
   }
 
   function updateDid() {
     var newHeirStruct = heirStruct;
-    newHeirStruct.heirDid = 'did:didMethod:'.concat(document.getElementsByClassName('heirDid')[0].value);
-
     console.log(newHeirStruct.heirDid);
+    newHeirStruct.heirDid = 'did:didMethod:'.concat(document.getElementById('heirDid').value);
+    dataUpdateHandler(newHeirStruct);
+  }
 
+  function dataUpdateHandler(newHeirStruct) {
+    props.update(newHeirStruct);
     updateHeirStruct(newHeirStruct);
   }
   
@@ -96,7 +97,7 @@ export default function Heir(props) {
         <div id='alignedContent'>
           <h5 id='contentMargin'>DID erede:</h5>
           <h5 id='precompiledWord'>did:</h5>
-          <input id='eredityInput' className='heirDid' onChange={() => { updateDid() }}/>
+          <input id='heirDid' className='eredityInput' onChange={() => { updateDid() }}/>
         </div>
         <br/>
         <div id='alignedContent'>
