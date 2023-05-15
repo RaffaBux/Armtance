@@ -5,9 +5,6 @@
 /.pnp
 .pnp.js
 
-# testing
-/coverage
-
 # production
 /build
 
@@ -25,3 +22,5 @@ yarn-error.log*
 # hardhat
 /artifacts
 /cache
+/coverage
+coverage.json
