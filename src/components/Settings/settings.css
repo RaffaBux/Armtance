@@ -3,7 +3,7 @@
   text-align: center;
 }
 
-#alignedContent {
+.centredRowContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -14,19 +14,10 @@
   margin: 15px;
 }
 
-#contentMargin {
+.contentMargin {
   margin: 30px;
 }
 
-#contentPadding {
+.contentPadding {
   padding: 30px;
-}
-
-.confirmButtonContainer {
-  background-color: #c7ecf7;
-}
-
-.confirmText {
-  padding: 10px;
-  margin: 10px;
 }

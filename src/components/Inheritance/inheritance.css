@@ -1,4 +1,4 @@
-.inheritance {
+.inheritanceMainContainer {
   padding: 10%;
   display: flex;
   flex-direction: column;
@@ -6,13 +6,13 @@
   align-items: center;
 }
 
-#confirmButtonContainer {
+.buttonContainer {
   background-color: #c7ecf7;
   margin: 10px;
   text-decoration: none;
 }
 
-#confirmText {
+.buttonText {
   padding: 10px;
   margin: 10px;
   color: black;

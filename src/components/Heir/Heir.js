@@ -9,10 +9,11 @@ import { RiDeleteBin2Fill, RiAddCircleFill } from 'react-icons/ri';
 export default function Heir(props) {
 
   const [addressIdCounter, updateAddressIdCounter] = useState(1);
-  const [delegated, setDelegation] = useState(false);
   const [addressCollection, updateAddressCollection] = useState([0]);
 
   const [heirStruct, updateHeirStruct] = useState(setDefaultStruct());
+
+  const [delegated, setDelegation] = useState(false);
 
   function setDefaultStruct() {
     var defaultHeirStruct = {...HeirStruct};
@@ -33,9 +34,8 @@ export default function Heir(props) {
     var newHeirStruct = heirStruct;
     var newAddressStruct = {...AddressStruct};
     newAddressStruct.addressId = addressIdCounter;
-    newHeirStruct.addressData.push(newAddressStruct);
 
-    console.log(newHeirStruct.addressData);
+    newHeirStruct.addressData.push(newAddressStruct);
     
     dataUpdateHandler(newHeirStruct);
 
@@ -59,7 +59,7 @@ export default function Heir(props) {
     dataUpdateHandler(newHeirStruct);
   }
 
-  function updateAddressData(newData) {
+  function updateAddressHandler(newData) {
     var newHeirStruct = heirStruct;
 
     for(let i = 0; i < newHeirStruct.addressData.length; i++) {
@@ -75,14 +75,14 @@ export default function Heir(props) {
   function updateDelegation() {
     var newHeirStruct = heirStruct;
     newHeirStruct.delegation = !delegated;
+
     dataUpdateHandler(newHeirStruct);
     setDelegation(!delegated);
   }
 
-  function updateDid() {
+  function didUpdateHandler() {
     var newHeirStruct = heirStruct;
-    console.log(newHeirStruct.heirDid);
-    newHeirStruct.heirDid = 'did:didMethod:'.concat(document.getElementById('heirDid').value);
+    newHeirStruct.heirDid = 'did:didMethod:'.concat(document.getElementsByClassName('heirDid')[props.index].value);
     dataUpdateHandler(newHeirStruct);
   }
 
@@ -92,38 +92,39 @@ export default function Heir(props) {
   }
   
   return(
-    <div id='alignedContent' className='heir'>
+    <div className='centredRowContainer heir'>
       <div className='heirContent'>
-        <div id='alignedContent'>
-          <h5 id='contentMargin'>DID erede:</h5>
-          <h5 id='precompiledWord'>did:</h5>
-          <input id='heirDid' className='eredityInput' onChange={() => { updateDid() }}/>
+        <div className='centredRowContainer'>
+          <h5 className='contentMargin'>DID erede:</h5>
+          <h5 className='heirText'>did:</h5>
+          <input className='heirDid largeDataInput' onChange={() => { didUpdateHandler() }}/>
         </div>
         <br/>
-        <div id='alignedContent'>
-          <h5 id='contentMargin'>delegato ad identificarsi come me:</h5>
+        <div className='centredRowContainer'>
+          <h5 className='contentMargin'>delegato ad identificarsi come me:</h5>
           <Checkbox checked={delegated} onChange={() => { updateDelegation() }}/>
         </div>
         <br/>
         <div>
-          <div id='contentPadding' onClick={() => { addAddressHandler() }}>
+          <div className='contentPadding' onClick={() => { addAddressHandler() }}>
             <RiAddCircleFill/>
           </div>
           <div>
           {
-            addressCollection.map((addressId) => (
+            addressCollection.map((addressId, addressIndex) => (
               <Address 
                 key={addressId} 
-                index={addressId}
+                index={addressIndex}
+                parentIndex={props.index}
                 remove={removeAddressHandler}
-                update={updateAddressData}
+                update={updateAddressHandler}
               />
             ))
           }
           </div>
         </div>
       </div>
-      <div id='contentPadding' className='leftBorderIcon' onClick={ () => removeHeir() }>
+      <div className='contentPadding leftBorderIcon' onClick={ () => removeHeir() }>
         <RiDeleteBin2Fill/>
       </div>
     </div>

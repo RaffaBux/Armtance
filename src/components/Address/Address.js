@@ -15,10 +15,11 @@ export default function Address(props) {
 
   function handleChange() {
     var newAddressData = addressData;
-    newAddressData.address = '0x'.concat(document.getElementById('address').value);
-    newAddressData.amount = document.getElementById('amount').value;
+    newAddressData.address = '0x'.concat(document.getElementsByClassName('heir')[props.parentIndex]
+        .getElementsByClassName('address')[props.index].value);
     
-    console.log(newAddressData.address);
+    newAddressData.amount = document.getElementsByClassName('heir')[props.parentIndex]
+      .getElementsByClassName('amount')[props.index].value;
 
     props.update(newAddressData);
     updateAddressData(newAddressData);
@@ -29,17 +30,20 @@ export default function Address(props) {
   }
   
   return(
-    <div id='alignedContent'>
-      <div id='contentPadding' onClick={removeAddress}>
+    <div className='centredRowContainer'>
+      <div className='contentPadding' onClick={removeAddress}>
         <RiDeleteBin2Fill/>
       </div>
       <hr/>
-      <h5 id='contentMargin'>address:</h5>
-      <h5 id='precompiledWord'>0x</h5>
-      <input id='address' className='eredityInput' maxLength={40} onChange={handleChange}/>
+      {
+        props.index
+      }
+      <h5 className='contentMargin'>address:</h5>
+      <h5 className='heirText'>0x</h5>
+      <input className='address largeDataInput' maxLength={40} onChange={handleChange}/>
       <hr/>
-      <input id='amount' className='smallEredityInput' onChange={handleChange}/>
-      <h5 id='contentMargin'>ETH</h5>
+      <input className='amount smallDataInput' onChange={handleChange}/>
+      <h5 className='contentMargin'>ETH</h5>
     </div>
   );
 }

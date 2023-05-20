@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { RiAddCircleFill } from 'react-icons/ri';
 import HeirStruct from '../../assets/heirStruct.json';
 
-export default function Settings() {
+export default function Settings(props) {
 
   const [heirsIdCounter, updateHeirsIdCounter] = useState(1);
   const [heirsIdCollection, updateHeirsIdCollection] = useState([0]);
@@ -51,10 +51,26 @@ export default function Settings() {
 
     updateHeirList(newHeirList);
   }
-  
+
+  function autoComplete() {
+    var numberOfAddresses = document.getElementsByClassName('address').length;
+    for(let i = 0; i < numberOfAddresses; i++) {
+      document.getElementsByClassName('address')[i].value = (props.addresses[i]).slice(2);
+      document.getElementsByClassName('amount')[i].value = i + 1;
+    }
+
+    var j = 0;
+    var heirs = document.getElementsByClassName('heir');
+    for(let i = 0; i < heirs.length; i++) {
+      document.getElementsByClassName('heirDid')[i].value = 'did:ssi-cot-eth:' + (i + 1) + ':' + props.addresses[j];
+      var numberOfAddresses = heirs[i].getElementsByClassName('address').length;
+      j = j + numberOfAddresses;
+    }
+  }
+ 
   return(
     <div className='settings'>
-      <div id='alignedContent' className='announcement'>
+      <div className='centredRowContainer announcement'>
         <h3>
           ciao, sono Armando e prima di venir cullato dolcemente 
           tra le braccia candide dell'angelo della Morte decido 
@@ -63,26 +79,32 @@ export default function Settings() {
         </h3>
       </div>
       <hr/>
-      <div id='alignedContent' className='addHeir'>
-        <h4 id='contentMargin'>
+      <div className='centredRowContainer'>
+        <h4 className='contentMargin'>
           inserisci i DID degli eredi tra cui spartire l'eredit&agrave;, 
           i loro address e l'ammontare corrispondente:
         </h4>
-        <div id='contentPadding' onClick={() => { addHeirHandler() }}>
+        <div className='contentPadding' onClick={() => { addHeirHandler() }}>
           <RiAddCircleFill/>
         </div>
         <div>
-          <div id='confirmButtonContainer' onClick={() => { console.log(heirList)}}>
-            <h5 id='confirmText'>CONFERMA</h5>
+          <div className='buttonContainer' onClick={ () => { autoComplete() }}>
+            <h5 className='buttonText'>AUTO-COMPLETA</h5>
+          </div>
+        </div>
+        <div>
+          <div className='buttonContainer' onClick={() => { console.log(heirList)}}>
+            <h5 className='buttonText'>CONFERMA</h5>
           </div>
         </div>
       </div>
       <div>
         {
-          heirsIdCollection.map((heirIdIterator) => (
+          heirsIdCollection.map((heirIdIterator, heirIndex) => (
             <Heir 
               key={heirIdIterator} 
-              index={heirIdIterator}
+              index={heirIndex}
+              className='heir'
               update={dataUpdateHandler} 
               remove={removeHeirHandler}
             />

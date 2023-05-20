@@ -23,7 +23,7 @@
     "hardhat": "npx hardhat node",
     "clear": "npx hardhat clean",
     "compileAll": "npm run clear && npx hardhat compile",
-    "deploySSI": "npm run compileAll && cd contracts && npx hardhat run --network localhost SSI/deploySSI.js && cd .."
+    "deploySSI": "npm run compileAll && npx hardhat run --network localhost src/scripts/SSI/deploySSI.js"
   },
   "eslintConfig": {
     "extends": [

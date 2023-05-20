@@ -18,7 +18,7 @@
   align-items: center;
 }
 
-.eredityInput {
+.largeDataInput {
   border-color: #68d9f8;
   border-radius: 50px;
   width: 100%;
@@ -28,7 +28,17 @@
   text-align: center;
 }
 
-#precompiledWord {
+.smallDataInput {
+  border-color: #68d9f8;
+  border-radius: 50px;
+  width: 25px;
+  height: 30px;
+  margin: 15px;
+  padding: 0 30px 0 30px;
+  text-align: center;
+}
+
+.heirText {
   text-align: right;
   margin: 30px 5px 30px 30px;
 }
