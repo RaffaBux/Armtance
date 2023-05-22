@@ -43,6 +43,7 @@ struct Issuer {
 
 // → per il momento ogni account con amount != 0 è attivo
 struct Account {
+	uint accountId;
 	address payable accountAddress;
 	uint amount;
 	// bool active;
@@ -51,18 +52,21 @@ struct Account {
 // → in questa maniera se l'utente perde la chiave privata
 //		son cazzi perché gli inculano la sua fetta di eredità
 struct Heir {
-	string did;
+	uint heirId;
+	string heirDid;
 	bool delegated;
-	bool active;
-	// Account[] addressCollection;
+	// bool active;
+	Account[] addressCollection;
+}
+
+struct HeirList {
+	Heir[] heirs;
 }
 
 contract Inheritance {
 
 	VerifiableCredential private vC;
 	Issuer private inheritanceOwner;
-
-	SelfSovereignIdentity private ssi; // test line
 	
 	mapping(string => Heir) private heirsDidToHeir;
 	uint numberOfHeirs;	// numero di eredi attivi
@@ -71,72 +75,71 @@ contract Inheritance {
 	uint heirIndex;	// id identificativo del did dell'erede
 
 	constructor(
-		string[] memory _heirsDid,
-		address payable[][] memory _addresses, 
-		bool[] memory _delegations, 
-		uint[][] memory _amounts,
-		string memory ownerDid,
-		string memory _signature
+		// string[] memory _heirsDid,
+		// address payable[][] memory _addresses, 
+		// bool[] memory _delegations, 
+		// uint[][] memory _amounts,
+		// string memory ownerDid,
+		// string memory _signature
 	) {	
 
-		ssi = new SelfSovereignIdentity(); // test line
-
-		inheritanceOwner = Issuer(msg.sender, ownerDid, _signature);
+		// inheritanceOwner = Issuer(msg.sender, ownerDid, _signature);
+		
 		numberOfHeirs = 0;
 		heirIndex = 0;
-		settings(_heirsDid, _addresses, _delegations, _amounts);
+		// settings(_heirsDid, _addresses, _delegations, _amounts);
 	}
 
-	function settings(
-		string[] memory _dids,
-		address payable[][] memory _addresses, 
-		bool[] memory _delegations, 
-		uint[][] memory _amounts
-	) private {
-		Account[] memory heirAccounts;
-		for(uint i = 0; i < _dids.length; i++) {	// TO DO: controllo nel caso il did esista già
-			heirAccounts = setAddresses(_addresses[i], _amounts[i]);
-			heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true);
-			// heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true, heirAccounts);
-			numberOfHeirs++;
+	// function settings(
+	// 	Heir[] memory _dids,
+	// 	address payable[][] memory _addresses, 
+	// 	bool[] memory _delegations, 
+	// 	uint[][] memory _amounts
+	// ) private {
+	// 	Account[] memory heirAccounts;
+	// 	for(uint i = 0; i < _dids.length; i++) {	// TO DO: controllo nel caso il did esista già
+	// 		heirAccounts = setAddresses(_addresses[i], _amounts[i]);
+	// 		heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true);
+	// 		// heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true, heirAccounts);
+	// 		numberOfHeirs++;
 
-			heirsIdToDid[heirIndex++] = _dids[i];
-		}
-	}
+	// 		heirsIdToDid[heirIndex++] = _dids[i];
+	// 	}
+	// }
 
 	
-	// → per come è stato progettato il contratto, al momento
-	//		_heirAddresses.length == _heirAddressesAmount.length
-	Account[] private heirAccountCollection;
-	function setAddresses(
-		address payable[] memory _heirAddresses,
-		uint[] memory _heirAddressesAmount
-	) private returns (Account[] memory) {
-		for(uint i = 0; i < _heirAddresses.length; i++) {
-			address payable iterationAddress = _heirAddresses[i];
-			heirAccountCollection.push(Account(iterationAddress, _heirAddressesAmount[i]));
-		}
-		return heirAccountCollection;
-	}
+	// // → per come è stato progettato il contratto, al momento
+	// //		_heirAddresses.length == _heirAddressesAmount.length
+	// Account[] private heirAccountCollection;
+	// function setAddresses(
+	// 	address payable[] memory _heirAddresses,
+	// 	uint[] memory _heirAddressesAmount
+	// ) private returns (Account[] memory) {
+	// 	for(uint i = 0; i < _heirAddresses.length; i++) {
+	// 		address payable iterationAddress = _heirAddresses[i];
+	// 		heirAccountCollection.push(Account(iterationAddress, _heirAddressesAmount[i]));
+	// 	}
+	// 	return heirAccountCollection;
+	// }
 
-	// → la VC mi arriva come stringa
-	// → TODO: riformattare stringa VC
-	function verify(string memory _vC) public {
-		vC = format(_vC);
-		bool verified = false;
-		if(verified) {
-			split();
-		} else {
-			split();
-		}		
-	}
+	// // → la VC mi arriva come stringa
+	// // → TODO: riformattare stringa VC
+	// function verify(string memory _vC) public {
+	// 	vC = format(_vC);
+	// 	bool verified = false;
+	// 	if(verified) {
+	// 		split();
+	// 	} else {
+	// 		split();
+	// 	}		
+	// }
 
-	function format(string memory _vC) private returns (VerifiableCredential memory) {
-		// return VerifiableCredential();
-	}
+	// function format(string memory _vC) private returns (VerifiableCredential memory) {
+	// 	// return VerifiableCredential();
+	// }
 
 	// → pensare una meglio implementazione o sticazzi?
-	function split() private {
+	// function split() private {
 		// uint idAmount;
 		// address payable idAddress;
 		// string memory iterationHeirDid;
@@ -165,7 +168,7 @@ contract Inheritance {
 		// 		}
 		// 	}
 		// }
-	}
+	// }
 
 	// function modify(
 	// 	string[] memory didsToBeRemoved,

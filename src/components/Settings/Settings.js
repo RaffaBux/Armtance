@@ -11,7 +11,7 @@ export default function Settings(props) {
 
   const [heirList, updateHeirList] = useState([setNewDefaultHeirStruct(0)]);
 
-  const [heirsTrigger, triggerUpdate] = useState(0);
+  const [heirsTrigger, triggerUpdate] = useState(false);
 
   function addHeirHandler() {    
     updateHeirsIdCollection(prevHeirsIds => ([
@@ -64,13 +64,21 @@ export default function Settings(props) {
     var heirs = document.getElementsByClassName('heir');
     for(let i = 0; i < heirs.length; i++) {
       document.getElementsByClassName('heirDid')[i].value = 'ssi-cot-eth:' + (i + 1) + ':' + props.addresses[j].slice(2);
-      var numberOfAddresses = heirs[i].getElementsByClassName('address').length;
+      let numberOfAddresses = heirs[i].getElementsByClassName('address').length;
       j = j + numberOfAddresses;
     }
 
-    triggerUpdate(heirsTrigger + 1);
+    triggerUpdate(!heirsTrigger);
   }
  
+  function saveData() {
+    props.save(heirList);
+  }
+
+  function confirmData() {
+    props.confirm(heirList);
+  }
+
   return(
     <div className='settings'>
       <div className='centredRowContainer announcement'>
@@ -83,22 +91,29 @@ export default function Settings(props) {
       </div>
       <hr/>
       <div className='centredRowContainer'>
+        <div>
+            <div className='buttonContainer' onClick={ () => { autoComplete() }}>
+              <h5 className='buttonText'>AUTO-COMPLETA</h5>
+            </div>
+        </div>
+        <div>
+          <div className='buttonContainer' onClick={ () => { saveData() }}>
+            <h5 className='buttonText'>SALVA</h5>
+          </div>
+        </div>
+        <div>
+          <div className='buttonContainer' onClick={ () => { confirmData() }}>
+            <h5 className='buttonText'>CONFERMA</h5>
+          </div>
+        </div>
+      </div>
+      <div className='centredRowContainer'>
         <h4 className='contentMargin'>
           inserisci i DID degli eredi tra cui spartire l'eredit&agrave;, 
           i loro address e l'ammontare corrispondente:
         </h4>
         <div className='contentPadding' onClick={() => { addHeirHandler() }}>
           <RiAddCircleFill/>
-        </div>
-        <div>
-          <div className='buttonContainer' onClick={ () => { autoComplete() }}>
-            <h5 className='buttonText'>AUTO-COMPLETA</h5>
-          </div>
-        </div>
-        <div>
-          <div className='buttonContainer' onClick={() => { console.log(heirList)}}>
-            <h5 className='buttonText'>CONFERMA</h5>
-          </div>
         </div>
       </div>
       <div>

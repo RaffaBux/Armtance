@@ -16,11 +16,11 @@ export default function Heir(props) {
 
   const [delegated, setDelegation] = useState(false);
 
-  const [addressesTrigger, triggerUpdate] = useState(0);
+  const [addressesTrigger, triggerUpdate] = useState(false);
 
   useEffect(() => {
     didUpdateHandler();
-    triggerUpdate(addressesTrigger + 1);
+    triggerUpdate(!addressesTrigger);
   }, [props.trigger]);
 
   function setNewDefaultHeirStruct(thisHeirId) {
