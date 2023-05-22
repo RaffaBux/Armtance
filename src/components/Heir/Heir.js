@@ -1,7 +1,7 @@
 import './heir.css';
-import React, { useState } from 'react';
 import { Checkbox } from '@mui/material';
 import Address from '../Address/Address';
+import React, { useEffect, useState } from 'react';
 import HeirStruct from '../../assets/heirStruct.json';
 import AddressStruct from '../../assets/addressStruct.json';
 import { RiDeleteBin2Fill, RiAddCircleFill } from 'react-icons/ri';
@@ -9,86 +9,103 @@ import { RiDeleteBin2Fill, RiAddCircleFill } from 'react-icons/ri';
 export default function Heir(props) {
 
   const [addressIdCounter, updateAddressIdCounter] = useState(1);
-  const [addressCollection, updateAddressCollection] = useState([0]);
+  const [addressIdCollection, updateAddressIdCollection] = useState([0]);
 
-  const [heirStruct, updateHeirStruct] = useState(setDefaultStruct());
+  const [heirStruct, updateHeirStruct] = useState(setNewDefaultHeirStruct(props.heirId));
+  const [addressList, updateAddressList] = useState([setNewDefaultAddressStruct(0)]);
 
   const [delegated, setDelegation] = useState(false);
 
-  function setDefaultStruct() {
+  const [addressesTrigger, triggerUpdate] = useState(0);
+
+  useEffect(() => {
+    didUpdateHandler();
+    triggerUpdate(addressesTrigger + 1);
+  }, [props.trigger]);
+
+  function setNewDefaultHeirStruct(thisHeirId) {
     var defaultHeirStruct = {...HeirStruct};
-    defaultHeirStruct.heirId = props.index;
+    defaultHeirStruct.heirId = thisHeirId;
     return defaultHeirStruct;
+  }
+
+  function setNewDefaultAddressStruct(thisAddressId) {
+    var defaultAddressStruct = {...AddressStruct};
+    defaultAddressStruct.addressId = thisAddressId;
+    return defaultAddressStruct;
   }
   
   function removeHeir() {
-    props.remove(props.index);
+    props.remove(props.heirId);
   }
 
   function addAddressHandler() {
-    updateAddressCollection(prevAddresses => ([
-      ...prevAddresses,
+    updateAddressIdCollection(prevAddressesIds => ([
+      ...prevAddressesIds,
       addressIdCounter
     ]));
 
-    var newHeirStruct = heirStruct;
-    var newAddressStruct = {...AddressStruct};
-    newAddressStruct.addressId = addressIdCounter;
+    var newAddressStruct = addressList;
+    newAddressStruct.push(setNewDefaultAddressStruct(addressIdCounter));
 
-    newHeirStruct.addressData.push(newAddressStruct);
-    
-    dataUpdateHandler(newHeirStruct);
+    var newHeirStruct = heirStruct;
+    newHeirStruct.addressData = newAddressStruct;
+
+    updateAddressList(newAddressStruct);
+    heirStructUpdateHandler(newHeirStruct);
 
     updateAddressIdCounter(addressIdCounter + 1);
   }
   
-  function removeAddressHandler(toRemove) {
-    if(addressCollection.length > 1) {
-      updateAddressCollection(
-        prevAddressesIds => prevAddressesIds.filter(
-          addressID => addressID !== toRemove
-        )
-      );
-    }
+  function removeAddressHandler(idToBeRemoved) {
+    if(addressIdCollection.length > 1) {
+      updateAddressIdCollection(prevAddressesIds => prevAddressesIds.filter(addressId => addressId !== idToBeRemoved));
 
-    var newHeirStruct = heirStruct;
-    var newAddressArray = newHeirStruct.addressData.filter(
-      address => address.addressId !== toRemove
-    );
-    newHeirStruct.addressData = newAddressArray;
-    dataUpdateHandler(newHeirStruct);
+      var newAddressList = addressList.filter(address => address.addressId !== idToBeRemoved);
+      var newHeirStruct = heirStruct;
+
+      newHeirStruct.addressData = newAddressList;
+
+      updateAddressList(newAddressList);
+      heirStructUpdateHandler(newHeirStruct);
+    }
   }
 
-  function updateAddressHandler(newData) {
+  function updateAddressHandler(updatedAddress) {
     var newHeirStruct = heirStruct;
+    var newAddressList = addressList;
 
-    for(let i = 0; i < newHeirStruct.addressData.length; i++) {
-      if(newHeirStruct.addressData[i].addressId === newData.addressId) {
-        newHeirStruct.addressData[i] = newData;
+    for(let i = 0; i < newAddressList.length; i++) {
+      if(newAddressList[i].addressId === updatedAddress.addressId) {
+        newAddressList[i] = updatedAddress;
+
+        newHeirStruct.addressData = newAddressList;
+
+        updateAddressList(newAddressList);
+        heirStructUpdateHandler(newHeirStruct);
         break;
       }
     }
-
-    dataUpdateHandler(newHeirStruct);
   }
 
   function updateDelegation() {
     var newHeirStruct = heirStruct;
     newHeirStruct.delegation = !delegated;
 
-    dataUpdateHandler(newHeirStruct);
     setDelegation(!delegated);
+    heirStructUpdateHandler(newHeirStruct);
   }
 
   function didUpdateHandler() {
     var newHeirStruct = heirStruct;
-    newHeirStruct.heirDid = 'did:didMethod:'.concat(document.getElementsByClassName('heirDid')[props.index].value);
-    dataUpdateHandler(newHeirStruct);
+
+    newHeirStruct.heirDid = 'did:'.concat(document.getElementsByClassName('heirDid')[props.index].value);
+    heirStructUpdateHandler(newHeirStruct);
   }
 
-  function dataUpdateHandler(newHeirStruct) {
-    props.update(newHeirStruct);
-    updateHeirStruct(newHeirStruct);
+  function heirStructUpdateHandler(updatedHeirStruct) {
+    props.update(updatedHeirStruct);
+    updateHeirStruct(updatedHeirStruct);
   }
   
   return(
@@ -111,11 +128,13 @@ export default function Heir(props) {
           </div>
           <div>
           {
-            addressCollection.map((addressId, addressIndex) => (
+            addressIdCollection.map((addressIdIterator, addressIndex) => (
               <Address 
-                key={addressId} 
+                key={addressIndex} 
                 index={addressIndex}
                 parentIndex={props.index}
+                addressId={addressIdIterator}
+                trigger={addressesTrigger}
                 remove={removeAddressHandler}
                 update={updateAddressHandler}
               />

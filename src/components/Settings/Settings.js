@@ -9,47 +9,48 @@ export default function Settings(props) {
   const [heirsIdCounter, updateHeirsIdCounter] = useState(1);
   const [heirsIdCollection, updateHeirsIdCollection] = useState([0]);
 
-  const [heirList, updateHeirList] = useState([{...HeirStruct}]);
+  const [heirList, updateHeirList] = useState([setNewDefaultHeirStruct(0)]);
+
+  const [heirsTrigger, triggerUpdate] = useState(0);
 
   function addHeirHandler() {    
-    updateHeirsIdCollection(prevHeirIds => ([
-      ...prevHeirIds,
+    updateHeirsIdCollection(prevHeirsIds => ([
+      ...prevHeirsIds,
       heirsIdCounter
     ]));
 
     updateHeirList(prevHeirs => ([
       ...prevHeirs,
-      getNewDefaultHeir(heirsIdCounter)
+      setNewDefaultHeirStruct(heirsIdCounter)
     ]));
 
     updateHeirsIdCounter(heirsIdCounter + 1);
   }
 
-  function getNewDefaultHeir(id) {
+  function setNewDefaultHeirStruct(thisHeirId) {
     var newHeir = {...HeirStruct};
-    newHeir.heirId = id;
+    newHeir.heirId = thisHeirId;
     return(newHeir);
   }
 
-  function removeHeirHandler(toRemove) {
+  function removeHeirHandler(idToBeRemoved) {
     if(heirsIdCollection.length > 1) {
-      updateHeirsIdCollection(prevHeirIds => prevHeirIds.filter(id => id !== toRemove));
-    }
-
-    updateHeirList(prevHeirList => prevHeirList.filter(heir => heir.heirId !== toRemove));
+      updateHeirsIdCollection(prevHeirIds => prevHeirIds.filter(id => id !== idToBeRemoved));
+      updateHeirList(prevHeirList => prevHeirList.filter(heir => heir.heirId !== idToBeRemoved));
+    }   
   }
 
-  function dataUpdateHandler(updatedData) {
+  function dataUpdateHandler(updatedHeir) {
     var newHeirList = heirList;
 
     for(let i = 0; i < newHeirList.length; i++) {
-      if(newHeirList[i].heirId === updatedData.heirId) {
-        newHeirList[i] = updatedData;
+      if(newHeirList[i].heirId === updatedHeir.heirId) {
+        newHeirList[i] = updatedHeir;
+
+        updateHeirList(newHeirList);
         break;
       }
     }
-
-    updateHeirList(newHeirList);
   }
 
   function autoComplete() {
@@ -62,10 +63,12 @@ export default function Settings(props) {
     var j = 0;
     var heirs = document.getElementsByClassName('heir');
     for(let i = 0; i < heirs.length; i++) {
-      document.getElementsByClassName('heirDid')[i].value = 'did:ssi-cot-eth:' + (i + 1) + ':' + props.addresses[j];
+      document.getElementsByClassName('heirDid')[i].value = 'ssi-cot-eth:' + (i + 1) + ':' + props.addresses[j].slice(2);
       var numberOfAddresses = heirs[i].getElementsByClassName('address').length;
       j = j + numberOfAddresses;
     }
+
+    triggerUpdate(heirsTrigger + 1);
   }
  
   return(
@@ -102,9 +105,11 @@ export default function Settings(props) {
         {
           heirsIdCollection.map((heirIdIterator, heirIndex) => (
             <Heir 
-              key={heirIdIterator} 
+              key={heirIndex} 
               index={heirIndex}
+              heirId={heirIdIterator}
               className='heir'
+              trigger={heirsTrigger}
               update={dataUpdateHandler} 
               remove={removeHeirHandler}
             />

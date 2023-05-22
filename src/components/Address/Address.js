@@ -1,32 +1,36 @@
 import './address.css';
-import React, { useState } from 'react';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
+import React, { useEffect, useState } from 'react';
 import AddressStruct from '../../assets/addressStruct.json';
 
 export default function Address(props) {
 
-  const [addressData, updateAddressData] = useState(setDefaultData());
+  const [addressStruct, updateAddressStruct] = useState(setNewDefaultAddressStruct(props.addressId));
 
-  function setDefaultData() {
-    var defaultAddressData = {...AddressStruct};
-    defaultAddressData.addressId = props.index;
-    return defaultAddressData;
+  useEffect(() => {
+    updatesHandler();
+  }, [props.trigger]);
+
+  function setNewDefaultAddressStruct(thisAddressId) {
+    var defaultAddressStruct = {...AddressStruct};
+    defaultAddressStruct.addressId = thisAddressId;
+    return defaultAddressStruct;
   }
 
-  function handleChange() {
-    var newAddressData = addressData;
+  function updatesHandler() {
+    var newAddressData = addressStruct;
     newAddressData.address = '0x'.concat(document.getElementsByClassName('heir')[props.parentIndex]
-        .getElementsByClassName('address')[props.index].value);
+      .getElementsByClassName('address')[props.index].value);
     
     newAddressData.amount = document.getElementsByClassName('heir')[props.parentIndex]
       .getElementsByClassName('amount')[props.index].value;
 
     props.update(newAddressData);
-    updateAddressData(newAddressData);
+    updateAddressStruct(newAddressData);
   }
 
   function removeAddress() {
-    props.remove(props.index);
+    props.remove(props.addressId);
   }
   
   return(
@@ -35,14 +39,11 @@ export default function Address(props) {
         <RiDeleteBin2Fill/>
       </div>
       <hr/>
-      {
-        props.index
-      }
       <h5 className='contentMargin'>address:</h5>
       <h5 className='heirText'>0x</h5>
-      <input className='address largeDataInput' maxLength={40} onChange={handleChange}/>
+      <input className='address largeDataInput' maxLength={40} onChange={updatesHandler}/>
       <hr/>
-      <input className='amount smallDataInput' onChange={handleChange}/>
+      <input className='amount smallDataInput' onChange={updatesHandler}/>
       <h5 className='contentMargin'>ETH</h5>
     </div>
   );
