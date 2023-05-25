@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19 <0.9.0;
 
-import '../SSI/SelfSovereignIdentity.sol'; // test line
-
 // struct Degree {
 // 	string degreeType;
 // 	string name;
@@ -37,15 +35,15 @@ struct VerifiableCredential {
 //		inheritanceOwner muore???
 struct Issuer {
 	address issuerAddress;
-	string issuerDid;
-	string signature;
+	// string issuerDid;
+	// string signature;
 }
 
 // → per il momento ogni account con amount != 0 è attivo
 struct Account {
 	uint accountId;
 	address payable accountAddress;
-	uint amount;
+	uint accountAmount;
 	// bool active;
 }
 
@@ -56,11 +54,7 @@ struct Heir {
 	string heirDid;
 	bool delegated;
 	// bool active;
-	Account[] addressCollection;
-}
-
-struct HeirList {
-	Heir[] heirs;
+	mapping(uint => Account) wallet;
 }
 
 contract Inheritance {
@@ -68,112 +62,40 @@ contract Inheritance {
 	VerifiableCredential private vC;
 	Issuer private inheritanceOwner;
 	
-	mapping(string => Heir) private heirsDidToHeir;
-	uint numberOfHeirs;	// numero di eredi attivi
+	// did → Heir
+	mapping(string => Heir) private heirMap; 
 
-	mapping(uint => string) private heirsIdToDid;
-	uint heirIndex;	// id identificativo del did dell'erede
-
-	constructor(
-		// string[] memory _heirsDid,
-		// address payable[][] memory _addresses, 
-		// bool[] memory _delegations, 
-		// uint[][] memory _amounts,
-		// string memory ownerDid,
-		// string memory _signature
-	) {	
-
-		// inheritanceOwner = Issuer(msg.sender, ownerDid, _signature);
-		
-		numberOfHeirs = 0;
-		heirIndex = 0;
-		// settings(_heirsDid, _addresses, _delegations, _amounts);
+	constructor() {	
+		inheritanceOwner = Issuer(msg.sender);
 	}
 
-	// function settings(
-	// 	Heir[] memory _dids,
-	// 	address payable[][] memory _addresses, 
-	// 	bool[] memory _delegations, 
-	// 	uint[][] memory _amounts
-	// ) private {
-	// 	Account[] memory heirAccounts;
-	// 	for(uint i = 0; i < _dids.length; i++) {	// TO DO: controllo nel caso il did esista già
-	// 		heirAccounts = setAddresses(_addresses[i], _amounts[i]);
-	// 		heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true);
-	// 		// heirsDidToHeir[_dids[i]] = Heir(_dids[i], _delegations[i], true, heirAccounts);
-	// 		numberOfHeirs++;
+	function setHeir(
+		uint _heirId,
+		string memory _heirDid,
+		bool _delegation
+	) public returns (bool) {
+		require(msg.sender == inheritanceOwner.issuerAddress, 'The setter is not the issuer!');
 
-	// 		heirsIdToDid[heirIndex++] = _dids[i];
-	// 	}
-	// }
+		Heir storage newHeir = heirMap[_heirDid];
+		newHeir.heirId = _heirId;
+		newHeir.heirDid = _heirDid;
+		newHeir.delegated = _delegation;
 
-	
-	// // → per come è stato progettato il contratto, al momento
-	// //		_heirAddresses.length == _heirAddressesAmount.length
-	// Account[] private heirAccountCollection;
-	// function setAddresses(
-	// 	address payable[] memory _heirAddresses,
-	// 	uint[] memory _heirAddressesAmount
-	// ) private returns (Account[] memory) {
-	// 	for(uint i = 0; i < _heirAddresses.length; i++) {
-	// 		address payable iterationAddress = _heirAddresses[i];
-	// 		heirAccountCollection.push(Account(iterationAddress, _heirAddressesAmount[i]));
-	// 	}
-	// 	return heirAccountCollection;
-	// }
+		return true;
+	}
 
-	// // → la VC mi arriva come stringa
-	// // → TODO: riformattare stringa VC
-	// function verify(string memory _vC) public {
-	// 	vC = format(_vC);
-	// 	bool verified = false;
-	// 	if(verified) {
-	// 		split();
-	// 	} else {
-	// 		split();
-	// 	}		
-	// }
-
-	// function format(string memory _vC) private returns (VerifiableCredential memory) {
-	// 	// return VerifiableCredential();
-	// }
-
-	// → pensare una meglio implementazione o sticazzi?
-	// function split() private {
-		// uint idAmount;
-		// address payable idAddress;
-		// string memory iterationHeirDid;
-		// Heir memory iterationHeir;
-		// Account[] memory heirAddressCollection;
-		// Account memory iterationAccount;
+	function setHeirAddresses(
+		uint index,
+		string memory _heirDid,
+		uint _accountId,
+		address payable _accountAddress,
+		uint _accountAmount
+	) public returns (bool) {
+		require(msg.sender == inheritanceOwner.issuerAddress, 'The setter is not the issuer!');
 		
-		// for(uint i = 0; i < heirIndex; i++) {
+		heirMap[_heirDid].wallet[index] = Account(_accountId, _accountAddress, _accountAmount);
 
-		// 	iterationHeirDid = heirsIdToDid[i];
-
-		// 	iterationHeir = heirsDidToHeir[iterationHeirDid];
-
-		// 	if(iterationHeir.active == true) {
-		// 		heirAddressCollection = iterationHeir.addressCollection;
-		// 		for(uint accountIndex = 0; accountIndex < heirAddressCollection.length; accountIndex++) {
-		// 			iterationAccount = heirAddressCollection[accountIndex];
-		// 			idAmount = iterationAccount.amount;
-		// 			if(idAmount > 0) {
-		// 				idAddress = iterationAccount.accountAddress;
-						
-		// 				// si prende i soldi direttamente dal conto dell'issuer?
-		// 				(bool success, ) = idAddress.call{value: idAmount}(''); // reentrancy?
-		// 				require(success, 'Fato caca adoso :C');
-		// 			}
-		// 		}
-		// 	}
-		// }
-	// }
-
-	// function modify(
-	// 	string[] memory didsToBeRemoved,
-	// 	Heir[] memory didsToBeAdded,
-	// 	Heir[] memory didsToBeModified
-	// ) public {}
+		return true;
+	}
 	
 }

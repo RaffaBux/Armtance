@@ -63,7 +63,7 @@ export default function Settings(props) {
     var j = 0;
     var heirs = document.getElementsByClassName('heir');
     for(let i = 0; i < heirs.length; i++) {
-      document.getElementsByClassName('heirDid')[i].value = 'ssi-cot-eth:' + (i + 1) + ':' + props.addresses[j].slice(2);
+      document.getElementsByClassName('heirDid')[i].value = props.dids[j].slice(4);
       let numberOfAddresses = heirs[i].getElementsByClassName('address').length;
       j = j + numberOfAddresses;
     }

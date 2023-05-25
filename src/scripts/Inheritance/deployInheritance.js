@@ -1,11 +1,6 @@
-const Web3 = require('web3');
-
 const Inheritance = require('../../artifacts/contracts/Inheritance/Inheritance.sol/Inheritance.json');
 
-export async function initializeINH(INHAddress, ownerAddress) {
-  
-  const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-
+export async function initializeINH(web3, INHAddress, ownerAddress, heirList) {
   const inhContract = new web3.eth.Contract(Inheritance.abi, INHAddress);
 
   const inhContractInstance = await inhContract.deploy({
@@ -20,5 +15,5 @@ export async function initializeINH(INHAddress, ownerAddress) {
   console.log(INHAddress);
   console.log('Inheritance contract deployed at:', inhContractInstance.options.address);
 
-  return inhContract;
+  return inhContractInstance;
 }
