@@ -97,5 +97,7 @@ contract Inheritance {
 
 		return true;
 	}
+
+	// function modifyHeir() public {}	//TODO
 	
 }

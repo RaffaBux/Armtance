@@ -105,7 +105,8 @@ export default function Router() {
     saveData(updatedHeirList);
 
     if(INHContractDeployed) {
-      updateContractHeirs(updatedHeirList);
+      // updateContractHeirs(updatedHeirList);  //TODO
+      setContractHeirs(INHContractInstance, updatedHeirList);
     } else {
       initializeINH(
         web3,
@@ -150,7 +151,7 @@ export default function Router() {
     });
   }
 
-  function updateContractHeirs(updatedHeirList) {}
+  // function updateContractHeirs(updatedHeirList) {} //TODO
 
   return(
     <RouterProvider router={router} />
