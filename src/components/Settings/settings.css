@@ -3,13 +3,6 @@
   text-align: center;
 }
 
-.centredRowContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
 .announcement {
   margin: 15px;
 }

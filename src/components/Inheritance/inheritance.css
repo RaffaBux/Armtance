@@ -6,6 +6,13 @@
   align-items: center;
 }
 
+.centredRowContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .buttonContainer {
   background-color: #c7ecf7;
   margin: 10px;
@@ -17,3 +24,9 @@
   margin: 10px;
   color: black;
 }
+
+.heirDataField {
+  padding: 10px;
+  margin: 10px;
+}
+
