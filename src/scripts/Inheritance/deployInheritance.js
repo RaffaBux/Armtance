@@ -1,6 +1,6 @@
 const Inheritance = require('../../artifacts/contracts/Inheritance/Inheritance.sol/Inheritance.json');
 
-export async function initializeINH(web3, INHAddress, ownerAddress, heirList) {
+export async function initializeINH(web3, INHAddress, ownerAddress) {
   const inhContract = new web3.eth.Contract(Inheritance.abi, INHAddress);
 
   const inhContractInstance = await inhContract.deploy({

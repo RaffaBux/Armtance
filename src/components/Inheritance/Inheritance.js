@@ -1,15 +1,11 @@
 import './inheritance.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Checkbox } from '@mui/material';
 
 export default function Inheritance(props) {
 
   const[currentUserDid, setCurrentUserDid] = useState(props.current.heirDid);
-
-  useEffect(() => {
-    console.log(props.current.heirDid)
-  }, []);
 
   function updateUser(did) {
     setCurrentUserDid(did);

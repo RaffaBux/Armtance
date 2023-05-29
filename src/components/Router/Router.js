@@ -4,21 +4,24 @@ import Settings from '../Settings/Settings';
 import React, { useEffect, useState } from 'react';
 import Inheritance from '../Inheritance/Inheritance';
 import OwnerStruct from '../../assets/ownerStruct.json';
+// import AccountStruct from '../../assets/accountStruct.json';
 import { initializeSSI } from '../../scripts/SSI/deploySSI';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { initializeINH } from '../../scripts/Inheritance/deployInheritance';
 
 export default function Router() {
 
-  // RESERVED
-  // 0 -> SSI contract
-  // 1 -> INH contract
-  // 2 -> Inheritance owner
+  // Reservation id -> 0 (not reserved) | Newtwork address index >= numberOfReservedAddresses
+  // Reservation id -> 1 (SSI contract) | Newtwork address index = 0
+  // Reservation id -> 2 (INH contract) | Newtwork address index = 1
+  // Reservation id -> 3 (Inheritance owner) | Newtwork address index = 2
   const numberOfReservedAddresses = 3;
   const [reservedAddresses, setReservedAddresses] = useState();
   const [accountsAddresses, setAccountsAddresses] = useState();
   const [reservedDids, setReservedDids] = useState();
   const [accountsDids, setAccountsDids] = useState();
+
+  // const [accounts, updateAccounts] = useState([]);
 
   const [SSIContractInstance, updateSSIContractInstance] = useState();
 
@@ -78,7 +81,6 @@ export default function Router() {
 
   async function getAccountAddresses() {  //test
     const addresses = await web3.eth.getAccounts();
-    
     var freeAddresses = addresses.slice(numberOfReservedAddresses);
     
     var lockedAddresses = [];
@@ -193,6 +195,13 @@ export default function Router() {
     console.log('ok siamo qua');
     console.log(verifiableCredential);
   }
+
+  // function verifyDeath(credentialSubjectId) {
+  //   if(credentialSubjectId === reservedDids[2]) 
+  //     return true;
+  //   else
+  //     return false;
+  // }
 
   return(
     <RouterProvider router={router} />
