@@ -2,41 +2,44 @@ import './settings.css';
 import Heir from '../Heir/Heir';
 import React, { useState } from 'react';
 import { RiAddCircleFill } from 'react-icons/ri';
-import HeirStruct from '../../assets/heirStruct.json';
+import UserStruct from '../../assets/userStruct.json';
+import AddressStruct from '../../assets/addressStruct.json';
 
 export default function Settings(props) {
 
   const [heirsIdCounter, updateHeirsIdCounter] = useState(1);
   const [heirsIdCollection, updateHeirsIdCollection] = useState([0]);
 
-  const [heirList, updateHeirList] = useState([setNewDefaultHeirStruct(0)]);
+  const [heirList, updateHeirList] = useState([setNewDefaultHeir(0)]);
 
   const [heirsTrigger, triggerUpdate] = useState(false);
 
   function addHeirHandler() {    
-    updateHeirsIdCollection(prevHeirsIds => ([
+    updateHeirsIdCollection((prevHeirsIds) => ([
       ...prevHeirsIds,
       heirsIdCounter
     ]));
 
-    updateHeirList(prevHeirs => ([
+    updateHeirList((prevHeirs) => ([
       ...prevHeirs,
-      setNewDefaultHeirStruct(heirsIdCounter)
+      setNewDefaultHeir(heirsIdCounter)
     ]));
 
     updateHeirsIdCounter(heirsIdCounter + 1);
   }
 
-  function setNewDefaultHeirStruct(thisHeirId) {
-    var newHeir = {...HeirStruct};
-    newHeir.heirId = thisHeirId;
-    return(newHeir);
+  function setNewDefaultHeir(thisHeirId) {
+    var newHeir = {...UserStruct};
+    newHeir.id = thisHeirId;
+    var newAddress = {...AddressStruct};
+    newHeir.addressData.push(newAddress);
+    return newHeir;
   }
 
   function removeHeirHandler(idToBeRemoved) {
     if(heirsIdCollection.length > 1) {
-      updateHeirsIdCollection(prevHeirIds => prevHeirIds.filter(id => id !== idToBeRemoved));
-      updateHeirList(prevHeirList => prevHeirList.filter(heir => heir.heirId !== idToBeRemoved));
+      updateHeirsIdCollection((prevHeirIds) => (prevHeirIds.filter(id => id !== idToBeRemoved)));
+      updateHeirList((prevHeirList) => (prevHeirList.filter(heir => heir.id !== idToBeRemoved)));
     }   
   }
 
@@ -44,27 +47,29 @@ export default function Settings(props) {
     var newHeirList = heirList;
 
     for(let i = 0; i < newHeirList.length; i++) {
-      if(newHeirList[i].heirId === updatedHeir.heirId) {
+      if(newHeirList[i].id === updatedHeir.id) {
         newHeirList[i] = updatedHeir;
-
-        updateHeirList(newHeirList);
         break;
       }
     }
+
+    updateHeirList(newHeirList);
   }
 
+  // development only method
   function autoComplete() {
     var numberOfAddresses = document.getElementsByClassName('address').length;
     for(let i = 0; i < numberOfAddresses; i++) {
-      document.getElementsByClassName('address')[i].value = (props.addresses[i]).slice(2);
+      document.getElementsByClassName('address')[i].value = (props.accounts[i].address).slice(2);
       document.getElementsByClassName('amount')[i].value = i + 1;
     }
 
     var j = 0;
     var heirs = document.getElementsByClassName('heir');
     for(let i = 0; i < heirs.length; i++) {
-      document.getElementsByClassName('heirDid')[i].value = props.dids[j].slice(4);
-      let numberOfAddresses = heirs[i].getElementsByClassName('address').length;
+      var nextDid = 'did:ssi-cot-eth:31337:'.concat(props.accounts[i].address);
+      document.getElementsByClassName('heirDid')[i].value = nextDid.slice(4);
+      var numberOfAddresses = heirs[i].getElementsByClassName('address').length;
       j = j + numberOfAddresses;
     }
 
@@ -92,9 +97,9 @@ export default function Settings(props) {
       <hr/>
       <div className='centredRowContainer'>
         <div>
-            <div className='buttonContainer' onClick={ () => { autoComplete() }}>
-              <h5 className='buttonText'>AUTO-COMPLETA</h5>
-            </div>
+          <div className='buttonContainer' onClick={ () => { autoComplete() }}>
+            <h5 className='buttonText'>AUTO-COMPLETA</h5>
+          </div>
         </div>
         <div>
           <div className='buttonContainer' onClick={ () => { saveData() }}>
@@ -112,7 +117,7 @@ export default function Settings(props) {
           inserisci i DID degli eredi tra cui spartire l'eredit&agrave;, 
           i loro address e l'ammontare corrispondente:
         </h4>
-        <div className='contentPadding' onClick={() => { addHeirHandler() }}>
+        <div className='contentPadding' onClick={ () => { addHeirHandler() }}>
           <RiAddCircleFill/>
         </div>
       </div>
@@ -122,7 +127,7 @@ export default function Settings(props) {
             <Heir 
               key={heirIndex} 
               index={heirIndex}
-              heirId={heirIdIterator}
+              id={heirIdIterator}
               className='heir'
               trigger={heirsTrigger}
               update={dataUpdateHandler} 

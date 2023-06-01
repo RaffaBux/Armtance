@@ -5,7 +5,7 @@ import AddressStruct from '../../assets/addressStruct.json';
 
 export default function Address(props) {
 
-  const [addressStruct, updateAddressStruct] = useState(setNewDefaultAddressStruct(props.addressId));
+  const [addressStruct, updateAddressStruct] = useState(setNewDefaultAddressStruct(props.id));
 
   useEffect(() => {
     updatesHandler();
@@ -13,7 +13,7 @@ export default function Address(props) {
 
   function setNewDefaultAddressStruct(thisAddressId) {
     var defaultAddressStruct = {...AddressStruct};
-    defaultAddressStruct.addressId = thisAddressId;
+    defaultAddressStruct.id = thisAddressId;
     return defaultAddressStruct;
   }
 
@@ -30,7 +30,7 @@ export default function Address(props) {
   }
 
   function removeAddress() {
-    props.remove(props.addressId);
+    props.remove(props.id);
   }
   
   return(

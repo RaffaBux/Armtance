@@ -2,7 +2,7 @@ import './heir.css';
 import { Checkbox } from '@mui/material';
 import Address from '../Address/Address';
 import React, { useEffect, useState } from 'react';
-import HeirStruct from '../../assets/heirStruct.json';
+import UserStruct from '../../assets/userStruct.json';
 import AddressStruct from '../../assets/addressStruct.json';
 import { RiDeleteBin2Fill, RiAddCircleFill } from 'react-icons/ri';
 
@@ -11,8 +11,8 @@ export default function Heir(props) {
   const [addressIdCounter, updateAddressIdCounter] = useState(1);
   const [addressIdCollection, updateAddressIdCollection] = useState([0]);
 
-  const [heirStruct, updateHeirStruct] = useState(setNewDefaultHeirStruct(props.heirId));
-  const [addressList, updateAddressList] = useState([setNewDefaultAddressStruct(0)]);
+  const [heirStruct, updateHeirStruct] = useState(setNewDefaultHeir(props.id));
+  const [addressList, updateAddressList] = useState([setNewDefaultAddress(0)]);
 
   const [delegated, setDelegation] = useState(false);
 
@@ -23,20 +23,21 @@ export default function Heir(props) {
     triggerUpdate(!addressesTrigger);
   }, [props.trigger]);
 
-  function setNewDefaultHeirStruct(thisHeirId) {
-    var defaultHeirStruct = {...HeirStruct};
-    defaultHeirStruct.heirId = thisHeirId;
-    return defaultHeirStruct;
+  function setNewDefaultHeir(thisHeirId) {
+    var newHeir = {...UserStruct};
+    newHeir.id = thisHeirId;
+    newHeir.addressData.push(setNewDefaultAddress(0));
+    return newHeir;
   }
 
-  function setNewDefaultAddressStruct(thisAddressId) {
+  function setNewDefaultAddress(thisAddressId) {
     var defaultAddressStruct = {...AddressStruct};
-    defaultAddressStruct.addressId = thisAddressId;
+    defaultAddressStruct.id = thisAddressId;
     return defaultAddressStruct;
   }
   
   function removeHeir() {
-    props.remove(props.heirId);
+    props.remove(props.id);
   }
 
   function addAddressHandler() {
@@ -46,7 +47,7 @@ export default function Heir(props) {
     ]));
 
     var newAddressStruct = addressList;
-    newAddressStruct.push(setNewDefaultAddressStruct(addressIdCounter));
+    newAddressStruct.push(setNewDefaultAddress(addressIdCounter));
 
     var newHeirStruct = heirStruct;
     newHeirStruct.addressData = newAddressStruct;
@@ -59,9 +60,9 @@ export default function Heir(props) {
   
   function removeAddressHandler(idToBeRemoved) {
     if(addressIdCollection.length > 1) {
-      updateAddressIdCollection(prevAddressesIds => prevAddressesIds.filter(addressId => addressId !== idToBeRemoved));
+      updateAddressIdCollection(prevAddressesIds => prevAddressesIds.filter(id => id !== idToBeRemoved));
 
-      var newAddressList = addressList.filter(address => address.addressId !== idToBeRemoved);
+      var newAddressList = addressList.filter(address => address.id !== idToBeRemoved);
       var newHeirStruct = heirStruct;
 
       newHeirStruct.addressData = newAddressList;
@@ -76,7 +77,7 @@ export default function Heir(props) {
     var newAddressList = addressList;
 
     for(let i = 0; i < newAddressList.length; i++) {
-      if(newAddressList[i].addressId === updatedAddress.addressId) {
+      if(newAddressList[i].id === updatedAddress.id) {
         newAddressList[i] = updatedAddress;
 
         newHeirStruct.addressData = newAddressList;
@@ -90,7 +91,7 @@ export default function Heir(props) {
 
   function updateDelegation() {
     var newHeirStruct = heirStruct;
-    newHeirStruct.delegation = !delegated;
+    newHeirStruct.delegated = !delegated;
 
     setDelegation(!delegated);
     heirStructUpdateHandler(newHeirStruct);
@@ -99,7 +100,7 @@ export default function Heir(props) {
   function didUpdateHandler() {
     var newHeirStruct = heirStruct;
 
-    newHeirStruct.heirDid = 'did:'.concat(document.getElementsByClassName('heirDid')[props.index].value);
+    newHeirStruct.did = 'did:'.concat(document.getElementsByClassName('heirDid')[props.index].value);
     heirStructUpdateHandler(newHeirStruct);
   }
 
@@ -133,7 +134,7 @@ export default function Heir(props) {
                 key={addressIndex} 
                 index={addressIndex}
                 parentIndex={props.index}
-                addressId={addressIdIterator}
+                id={addressIdIterator}
                 trigger={addressesTrigger}
                 remove={removeAddressHandler}
                 update={updateAddressHandler}

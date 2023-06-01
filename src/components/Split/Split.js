@@ -11,7 +11,7 @@ export default function Split(props) {
       var vcContent = JSON.parse(reader.result);
       
       // TODO: controlli se il file è json etc
-      props.splitHandler(vcContent);
+      props.split(vcContent);
     };
 
     reader.readAsText(vc);

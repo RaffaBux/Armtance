@@ -1,8 +1,7 @@
 {
+  "id": 0,
   "address": "",
-  "publicKey": "",
+  "privateKey": "",
   "did": "",
-  "active": false,
-  "reserved": false,
-  "reservationId": 0
+  "active": false
 }

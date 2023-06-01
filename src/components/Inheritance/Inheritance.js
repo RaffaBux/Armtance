@@ -5,12 +5,12 @@ import { Checkbox } from '@mui/material';
 
 export default function Inheritance(props) {
 
-  const[currentUserDid, setCurrentUserDid] = useState(props.current.heirDid);
+  const [currentUser, setCurrentUser] = useState(props.current);
 
-  function updateUser(did) {
-    setCurrentUserDid(did);
+  function updateCurrentUser(newCurrentUser) {
+    setCurrentUser(newCurrentUser);
 
-    props.userChange(did)
+    props.currentUserChange(newCurrentUser.did);
   }
 
   return(
@@ -25,15 +25,15 @@ export default function Inheritance(props) {
       <div>
         {
           props.users.map((user, userIndex) => {
-            if(user.heirDid) {
+            if(user.did) {
               return(
                 <div key={userIndex} className='centredRowContainer heir'>
                   <Checkbox
-                    checked={currentUserDid === user.heirDid}
-                    onChange={ () => updateUser(user.heirDid) }
+                    checked={currentUser.did === user.did}
+                    onChange={ () => updateCurrentUser(user) }
                   />
                   <h5 className='heirDataField address'>
-                    {user.heirDid}
+                    {user.did}
                   </h5>
                 </div>
               )
