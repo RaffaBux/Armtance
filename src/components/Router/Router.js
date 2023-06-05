@@ -67,7 +67,8 @@ export default function Router() {
     }
   ]);
 
-  useEffect(() => {  
+  // it is fired twice due React Strict Mode
+  useEffect(() => {
     getAccountAddresses().then((accountsStruct) => {
       codeStartUpHandler(accountsStruct);
 
@@ -87,7 +88,7 @@ export default function Router() {
     for(let i = 0; i < nodeAccounts.length; i++) {
       var thisAddress = nodeAccounts[i];
       
-      // brutta bestia ma useEffect veniva chiamato due robe e mi duplicava gli account
+      // condition needed to counter useEffect development double shot
       if(
         newReservedAccounts.filter((account) => (account.address === thisAddress)).length < 1
         &&
@@ -152,9 +153,6 @@ export default function Router() {
         thisAccountList.reserved.filter((account) => (account.reservationId === vcReleaserReservedAccountIndex))
       ).then((chainAccounts) => {
         thisAccountList = setNewAccounts(thisAccountList, chainAccounts);
-
-        console.log(thisAccountList);
-
         updateAccountList(thisAccountList);
       });
 
@@ -163,7 +161,7 @@ export default function Router() {
   }
 
   // development only function
-  function setNewAccounts(thisAccountList, updatedAccounts) {
+  function setNewAccounts(thisAccountList, updatedAccounts) {  
     if(updatedAccounts.length > 0) {
       var accountsIndexIterator = 0;
       var newAccountList = thisAccountList;
@@ -244,7 +242,11 @@ export default function Router() {
 
   // function updateContractHeirs(updatedHeirList) {} //TODO
 
-  function verifyVC(verifiableCredential) {
+  async function verifyVC(verifiableCredential) {
+    // non returna nullaaaaaaa
+    const test = await SSIContractInstance.methods.resolveChain(accountList.reserved[5].did).call();
+    console.log(test);
+
     console.log('ok siamo qua');
     console.log(verifiableCredential);
   }

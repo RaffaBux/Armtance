@@ -4,5 +4,6 @@
   "privateKey": "",
   "did": "",
   "active": false,
-  "reservationId": ""
+  "reservationId": "",
+  "signature": ""
 }

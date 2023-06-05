@@ -67,7 +67,7 @@ export default function Settings(props) {
     var j = 0;
     var heirs = document.getElementsByClassName('heir');
     for(let i = 0; i < heirs.length; i++) {
-      var nextDid = 'did:ssi-cot-eth:31337:'.concat(props.accounts[i].address);
+      var nextDid = 'did:ssi-cot-eth:31337:'.concat(props.accounts[i].address.slice(2));
       document.getElementsByClassName('heirDid')[i].value = nextDid.slice(4);
       var numberOfAddresses = heirs[i].getElementsByClassName('address').length;
       j = j + numberOfAddresses;
