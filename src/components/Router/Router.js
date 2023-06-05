@@ -9,11 +9,13 @@ import AccountStruct from '../../assets/accountStruct.json';
 import AccountListStruct from '../../assets/accountListStruct.json';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { deployINH } from '../../scripts/Inheritance/deployInheritance';
+import { setDefaultChain } from '../../scripts/SelfSovereignIdentity/setDefaultChain';
 import { deploySSI } from '../../scripts/SelfSovereignIdentity/deploySelfSovereignIdentity';
 
 export default function Router() {
 
-  const numberOfReservedAddresses = 3;
+  const numberOfReservedAddresses = 6;
+  const vcReleasersChainLength = 3;
 
   const ssiReservedAccountIndex = 0;
   const inhReservedAccountIndex = 1;
@@ -67,7 +69,7 @@ export default function Router() {
 
   useEffect(() => {  
     getAccountAddresses().then((accountsStruct) => {
-      deploySSIHandler(accountsStruct);
+      codeStartUpHandler(accountsStruct);
 
       console.log('SSI addr: ' + accountsStruct.reserved[0].address);
       console.log('INH addr: ' + accountsStruct.reserved[1].address);
@@ -83,20 +85,30 @@ export default function Router() {
     const nodeAccounts = await web3.eth.getAccounts();
 
     for(let i = 0; i < nodeAccounts.length; i++) {
-      var newAccount = {...AccountStruct};
-      newAccount.address = nodeAccounts[i];
+      var thisAddress = nodeAccounts[i];
+      
+      // brutta bestia ma useEffect veniva chiamato due robe e mi duplicava gli account
+      if(
+        newReservedAccounts.filter((account) => (account.address === thisAddress)).length < 1
+        &&
+        newFreeAccounts.filter((account) => (account.address === thisAddress)).length < 1
+      ) {
+        var newAccount = {...AccountStruct};
+        newAccount.address = thisAddress;
 
-      if(i < numberOfReservedAddresses) {
-        if(i > vcReleaserReservedAccountIndex - 1) {
-          newAccount.id = vcReleaserReservedAccountIndex;
-        } else {
+        if(i < numberOfReservedAddresses) {
+          if(i > vcReleaserReservedAccountIndex - 1) {
+          newAccount.reservationId = vcReleaserReservedAccountIndex;
+          } else {
+            newAccount.reservationId = i;
+          }
+          
           newAccount.id = i;
+          newReservedAccounts.push(newAccount);
+        } else {
+          newAccount.id = i - numberOfReservedAddresses;
+          newFreeAccounts.push(newAccount);
         }
-        
-        newReservedAccounts.push(newAccount);
-      } else {
-        newAccount.id = i - numberOfReservedAddresses;
-        newFreeAccounts.push(newAccount);
       }
     }
 
@@ -109,17 +121,22 @@ export default function Router() {
   }
 
   // development only function
-  async function deploySSIHandler(accountList) {
-    deploySSI(web3, accountList.reserved[ssiReservedAccountIndex].address).then((ssiContractInstance) => {      
-      ssiContractInstance.methods.addressToDid(accountList.reserved[ownerReservedAccountIndex].address).call().then((ownerDid) => { 
-        accountList.reserved[ownerReservedAccountIndex].did = ownerDid;
+  async function codeStartUpHandler(accountsStruct) {
+    deploySSIHandler(accountsStruct);
+  }
+
+  // development only function
+  async function deploySSIHandler(thisAccountList) {
+    deploySSI(web3, thisAccountList.reserved[ssiReservedAccountIndex].address).then((ssiContractInstance) => {      
+      ssiContractInstance.methods.addressToDid(thisAccountList.reserved[ownerReservedAccountIndex].address).call().then((ownerDid) => { 
+        thisAccountList.reserved[ownerReservedAccountIndex].did = ownerDid;
 
         var newInheritanceOwner = {...UserStruct};
         newInheritanceOwner.did = ownerDid;
         newInheritanceOwner.owner = true;
 
         var newAddress = {...AddressStruct};
-        newAddress.address = accountList.reserved[ownerReservedAccountIndex].address;
+        newAddress.address = thisAccountList.reserved[ownerReservedAccountIndex].address;
         newInheritanceOwner.addressData.push(newAddress);
         
         saveData([]);
@@ -127,10 +144,40 @@ export default function Router() {
         updateInheritanceOwner([newInheritanceOwner]);
       });
 
-      accountList.reserved[ownerReservedAccountIndex].active = true;
-      updateAccountList(accountList);
+      thisAccountList.reserved[ownerReservedAccountIndex].active = true;
+
+      setDefaultChain(
+        web3, 
+        ssiContractInstance, 
+        thisAccountList.reserved.filter((account) => (account.reservationId === vcReleaserReservedAccountIndex))
+      ).then((chainAccounts) => {
+        thisAccountList = setNewAccounts(thisAccountList, chainAccounts);
+
+        console.log(thisAccountList);
+
+        updateAccountList(thisAccountList);
+      });
+
       updateSSIContractInstance(ssiContractInstance);
     });
+  }
+
+  // development only function
+  function setNewAccounts(thisAccountList, updatedAccounts) {
+    if(updatedAccounts.length > 0) {
+      var accountsIndexIterator = 0;
+      var newAccountList = thisAccountList;
+
+      for(let i = 0; i < newAccountList.reserved.length && accountsIndexIterator < updatedAccounts.length; i++) {
+        if(newAccountList.reserved[i].reservationId === updatedAccounts[accountsIndexIterator].reservationId) {
+          newAccountList.reserved[i] = updatedAccounts[accountsIndexIterator++];
+        }
+      }
+
+      return newAccountList;
+    } else {
+      return [];
+    }
   }
 
   function currentUserChangeHandler(did) {

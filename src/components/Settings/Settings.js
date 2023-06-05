@@ -38,8 +38,8 @@ export default function Settings(props) {
 
   function removeHeirHandler(idToBeRemoved) {
     if(heirsIdCollection.length > 1) {
-      updateHeirsIdCollection((prevHeirIds) => (prevHeirIds.filter(id => id !== idToBeRemoved)));
-      updateHeirList((prevHeirList) => (prevHeirList.filter(heir => heir.id !== idToBeRemoved)));
+      updateHeirsIdCollection((prevHeirIds) => (prevHeirIds.filter((id) => (id !== idToBeRemoved ))));
+      updateHeirList((prevHeirList) => (prevHeirList.filter((heir) => (heir.id !== idToBeRemoved ))));
     }   
   }
 

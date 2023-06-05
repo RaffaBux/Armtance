@@ -3,5 +3,6 @@
   "address": "",
   "privateKey": "",
   "did": "",
-  "active": false
+  "active": false,
+  "reservationId": ""
 }
