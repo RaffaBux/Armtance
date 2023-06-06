@@ -1,4 +1,4 @@
-const SelfSovereignIdentity = require('../../artifacts/contracts/SSI/SelfSovereignIdentity.sol/SelfSovereignIdentity.json');
+const SelfSovereignIdentity = require('../../artifacts/ChainOfTrustDidSsi.json');
 
 export async function deploySSI(web3, ssiAddress) {
   const ssiContract = new web3.eth.Contract(SelfSovereignIdentity.abi, ssiAddress);
@@ -8,8 +8,8 @@ export async function deploySSI(web3, ssiAddress) {
     arguments: []
   }).send({
     from: ssiAddress,
-    gas: 3000000,
-    gasPrice: '30000000000000'
+    gas: 30000000,
+    gasPrice: '2000000000'
   });
 
   console.log('SSI param address: ', ssiAddress);

@@ -2,6 +2,10 @@
 
 `node v16.0.0`
 
+# Requires Truffle
+
+run `npm install -g truffle`
+
 ## Available Scripts
 
 In the project directory, you can run: </br>
@@ -13,10 +17,6 @@ Runs the app in the development mode: open [http://localhost:3000](http://localh
 
 The page will reload when you make changes. </br>
 You may also see any lint errors in the console. </br>
-
-### `npm run hardhat`
-
-Runs a Hardhat network. </br>
 
 ### `npm run compileAll`
 

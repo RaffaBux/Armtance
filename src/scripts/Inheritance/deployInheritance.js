@@ -1,4 +1,5 @@
-const Inheritance = require('../../artifacts/contracts/Inheritance/Inheritance.sol/Inheritance.json');
+const Inheritance = require('../../artifacts/Inheritance.json');
+// const Inheritance = require('../../artifacts/contracts/Inheritance/Inheritance.sol/Inheritance.json');
 
 export async function deployINH(web3, inhAddress, ownerAddress) {
   const inhContract = new web3.eth.Contract(Inheritance.abi, inhAddress);
@@ -8,8 +9,8 @@ export async function deployINH(web3, inhAddress, ownerAddress) {
     arguments: []
   }).send({
     from: ownerAddress, // ← msg.sender
-    gas: 3000000,
-    gasPrice: '30000000000000'
+    gas: 30000000,
+    gasPrice: '2000000000'
   });
 
   console.log('INH param address: ', inhAddress);

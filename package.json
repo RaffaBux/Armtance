@@ -19,11 +19,7 @@
   },
   "scripts": {
     "start": "npm install && react-scripts start",
-    "build": "react-scripts build",
-    "hardhat": "npx hardhat node",
-    "clear": "npx hardhat clean",
-    "compileAll": "npm run clear && npx hardhat compile",
-    "deploySSI": "npm run compileAll && npx hardhat run --network localhost src/scripts/SSI/deploySSI.js"
+    "compileAll": "truffle compile"
   },
   "eslintConfig": {
     "extends": [
