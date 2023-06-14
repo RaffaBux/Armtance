@@ -69,8 +69,8 @@ export default function Settings(props) {
     for(let i = 0; i < heirs.length; i++) {
       var nextDid = 'did:ssi-cot-eth:31337:'.concat(props.accounts[i].address.slice(2));
       document.getElementsByClassName('heirDid')[i].value = nextDid.slice(4);
-      var numberOfAddresses = heirs[i].getElementsByClassName('address').length;
-      j = j + numberOfAddresses;
+      var thisNumberOfAddresses = heirs[i].getElementsByClassName('address').length;
+      j = j + thisNumberOfAddresses;
     }
 
     triggerUpdate(!heirsTrigger);
