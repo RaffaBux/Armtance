@@ -26,7 +26,7 @@ export default function Heir(props) {
   function setNewDefaultHeir(thisHeirId) {
     var newHeir = {...UserStruct};
     newHeir.id = thisHeirId;
-    newHeir.addressData.push(setNewDefaultAddress(0));
+    newHeir.addressData = [setNewDefaultAddress(0)];
     return newHeir;
   }
 

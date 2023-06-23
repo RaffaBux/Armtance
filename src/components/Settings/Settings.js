@@ -32,7 +32,7 @@ export default function Settings(props) {
     var newHeir = {...UserStruct};
     newHeir.id = thisHeirId;
     var newAddress = {...AddressStruct};
-    newHeir.addressData.push(newAddress);
+    newHeir.addressData = [newAddress];
     return newHeir;
   }
 
