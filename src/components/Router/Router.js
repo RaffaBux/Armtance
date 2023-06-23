@@ -54,23 +54,25 @@ export default function Router() {
     });
 
     fetch('http://localhost:3015/getOwner').then(async (ownerAccount) => {
-      var newOwnerAccount = await ownerAccount.json();
-      var ownerUser = accountToUser(newOwnerAccount, true);
+      ownerAccount.json().then((ownerJSON) => {
+        var ownerUser = accountToUser(ownerJSON, true);
 
-      setCurrentUser(ownerUser);
-      updateInheritanceOwner([ownerUser]);
-      updateUserList([ownerUser]);
+        setCurrentUser(ownerUser);
+        updateInheritanceOwner([ownerUser]);
+        updateUserList([ownerUser]);
+      });
     });
   }, [])
 
   function accountToUser(account, ownership) {
     var newUser = {...UserStruct};
+
     newUser.did = account.did;
     newUser.owner = ownership;
 
     var newAddress = {...AddressStruct};
     newAddress.address = account.address;
-    newUser.addressData.push(newAddress);
+    newUser.addressData = [newAddress];
 
     return newUser
   }
@@ -80,7 +82,7 @@ export default function Router() {
     updateUserList(newUsersArray);
   }
 
-  async function confirmData(updatedHeirList) {
+  function confirmData(updatedHeirList) {
     saveUserList(updatedHeirList);
 
     fetch('http://localhost:3015/isINHDeployed', {
@@ -92,35 +94,36 @@ export default function Router() {
       body: JSON.stringify({
         policyIdentifier: policyId
       })
-    }).then((deployed) => {
-      var isDeployed = (deployed.json()).result;
+    }).then(async (results) => {
+      var isDeployedJSON = await results.json();
 
-      if(!isDeployed) {
-        fetch('http://localhost:3015/deployINH');
+      if(!isDeployedJSON.result) {
+        await fetch('http://localhost:3015/deployINH');
       }
 
-      fetch('http://localhost:3015/saveHeirs', {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          sender: currentUser,
-          policyIdentifier: policyId,
-          heirList: updatedHeirList
-        })
-      }).then((results) => {
-        var parsedResults = (results.json()).errorMessage;
-
-        console.log(parsedResults);  //TEST
-      });
+      saveHeirs(updatedHeirList);
     });
-
-    console.log('AAAAAAA');  //TEST
   }
 
-  
+  function saveHeirs(updatedHeirList) {
+    fetch('http://localhost:3015/saveHeirs', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        policyIdentifier: policyId,
+        heirList: updatedHeirList,
+        sender: currentUser
+      })
+    }).then((results) => {
+      results.json().then((heirsSavingJSON) => {
+        console.log(heirsSavingJSON);
+      });
+    });
+  }
+
   function currentUserChangeHandler(did) {
     userList.forEach((user) => {
       if(user.did === did) { setCurrentUser(user); }
@@ -128,35 +131,6 @@ export default function Router() {
   }
 
   //FINO A QUA TUTTO OK
-
-  // TODO: aggiungere controlli
-  // TODO: invocare createTrustedChild per ogni erede da settare (signature e private keys)
-  // async function setHeirsIntoINHContract(inhContractInstance, heirList) {
-  //   heirList.forEach((heir) => {
-  //     inhContractInstance.methods.setHeir(
-  //       heir.id,
-  //       heir.did,
-  //       heir.delegated
-  //     ).call({from: accountList.reserved[ownerReservedAccountIndex].address}).then((result) => { 
-  //       result ? console.log('1: oke!') : console.log('1: mica oke :c ')
-  //     });
-  //   });
-
-  //   heirList.forEach((heir) => {
-  //     heir.addressData.forEach((account, index) => {
-  //       inhContractInstance.methods.setHeirAddresses(
-  //         index,
-  //         heir.did,
-  //         account.id,
-  //         account.address,
-  //         account.amount
-  //       ).call({from: accountList.reserved[ownerReservedAccountIndex].address}).then((result) => { 
-  //           result ? console.log('2: oke!') : console.log('2: mica oke :c')
-  //       });
-  //     });
-  //   });
-  // }
-
   // function updateContractHeirs(updatedHeirList) {} //TODO
 
   async function verifyVC(verifiableCredential) {
