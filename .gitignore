@@ -20,3 +20,5 @@ coverage
 coverage.json
 package-lock.json
 src/artifacts
+src/test/*
+!src/test/.gitkeep

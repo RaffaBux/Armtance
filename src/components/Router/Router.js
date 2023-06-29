@@ -42,18 +42,23 @@ export default function Router() {
       path: '/split',
       element: <Split 
         split={verifyVC}
+        current={currentUser}
       />
     }
   ]);
 
   // it is fired twice due React Strict Mode
   useEffect(() => {
-    fetch('http://localhost:3015/getAccounts').then(async (accountListString) => {
+    fetch('http://localhost:3015/getAccounts', {
+      method: 'post'
+    }).then(async (accountListString) => {
       var newAccountList = await accountListString.json();
       updateAccountList(newAccountList);
     });
 
-    fetch('http://localhost:3015/getOwner').then(async (ownerAccount) => {
+    fetch('http://localhost:3015/getOwner', {
+      method: 'post'
+    }).then(async (ownerAccount) => {
       ownerAccount.json().then((ownerJSON) => {
         var ownerUser = accountToUser(ownerJSON, true);
 
@@ -62,6 +67,9 @@ export default function Router() {
         updateUserList([ownerUser]);
       });
     });
+
+    // DEVELOPEMENT ONLY
+    fetch('http://localhost:3015/getExampleVC', { method: 'post' });
   }, [])
 
   function accountToUser(account, ownership) {
@@ -98,7 +106,7 @@ export default function Router() {
       var isDeployedJSON = await results.json();
 
       if(!isDeployedJSON.result) {
-        await fetch('http://localhost:3015/deployINH');
+        await fetch('http://localhost:3015/deployINH', { method: 'post' });
       }
 
       saveHeirs(updatedHeirList);
@@ -130,24 +138,22 @@ export default function Router() {
     });
   }
 
-  //FINO A QUA TUTTO OK
-  // function updateContractHeirs(updatedHeirList) {} //TODO
+  // function updateContractHeirs(updatedHeirList) {} // TODO
 
   async function verifyVC(verifiableCredential) {
-    // non returna nullaaaaaaa
-    // const test = await SSIContractInstance.methods.resolveChain(accountList.reserved[5].did).call();
-    // console.log(test);
-
-    console.log('ok siamo qua');
-    console.log(verifiableCredential);
+    fetch('http://localhost:3015/verifyVC', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(verifiableCredential)
+    }).then((results) => {
+      results.json().then((resultsJSON) => {
+        resultsJSON ? console.log('eredità smistata') : console.log('vc non autentica. eredità non smistata');
+      })
+    });
   }
-
-  // function verifyDeath(credentialSubjectId) {
-  //   if(credentialSubjectId === reservedDids[2]) 
-  //     return true;
-  //   else
-  //     return false;
-  // }
 
   return(
     <RouterProvider router={router} />

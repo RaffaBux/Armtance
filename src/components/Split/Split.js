@@ -20,19 +20,14 @@ export default function Split(props) {
   return(
     <div className='split'>
       <div className='centredRowContainer announcement'>
-        <h3>
-          ciao ₍´｡• ◡ •｡`₎ sono Gilberto, erede legittimo di Armando 
-          ₍ ︶︿︶₎ e mi sono autenticato come il mio caro, ehm..., 
-          z-zietto (??) ૮₍˶Ó﹏Ò ₎ა fornendo questa Verifiable Credential 
-          TOTALMENTE autentica ₍づ◡﹏◡₎づ
-        </h3>
+        <h3> Pagina dell'erede identificato come {props.current.did} </h3>
       </div>
       <hr/>
       <div className='centredRowContainer'>
         <div>
-            <div className='buttonContainer'>
-              <input type='file' id='vcInput' className='buttonText'/>
-            </div>
+          <div className='buttonContainer'>
+            <input type='file' id='vcInput' className='buttonText'/>
+          </div>
         </div>
         <div>
           <div className='buttonContainer' onClick={ () => { splitHandler() }}>

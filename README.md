@@ -14,3 +14,7 @@ In the project directory, you can run: </br>
 
 Downloads all the dependencies. </br>
 Runs the app in the development mode: open [http://localhost:3005](http://localhost:3005) to view it in your browser. </br>
+
+## To dos
+
+* Convert all the ETH amounts in ETH %
