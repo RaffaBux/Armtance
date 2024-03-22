@@ -5,6 +5,7 @@ For more info on the project check the [ArmtanceServer project repo](https://git
 # Recommended Node version for the project
 
 `node v18.16.0`
+`npm v9.5.1`
 
 ## Available Scripts
 
